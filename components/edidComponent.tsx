@@ -38,7 +38,7 @@ export default function FormEdidDialog(props: PropsData) {
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
-    name: Yup.string()
+    todo: Yup.string()
       .required("Name is required")
       .min(2, "Too Short!")
       .max(50, "Too Long!"),
