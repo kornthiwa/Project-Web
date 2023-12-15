@@ -25,11 +25,14 @@ interface DataContext {
 
 interface MyContextProps {
   data: DataContext[];
+  filterdata: DataContext[];
   addData: (newData: DataContext) => void;
+
   deleteDatasorf: (idData: number) => void;
   editData: (id: number, datafrom: DataContext) => void;
   deleteDatahard: (id: number) => void;
   unsorfdelete: (id: number) => void;
+  FilterData: (name: string) => void;
 }
 
 const MyContext = createContext<MyContextProps | undefined>(undefined);
@@ -54,9 +57,25 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
   //   { id: 11, name: 'Bob Smith', email: 'bob@example.com', priority: 3, type: 'Admin', image: null, status: 1, active: true, deletestatus: false },
   // ];
   const [data, setData] = React.useState<DataContext[]>([]);
+  const [filterdata, setFilterdata] = React.useState<DataContext[]>([]);
+
+  const FilterData = (name: string) => {
+    let filteredData;
+
+    if (name) {
+      filteredData = data.filter((item) => item.name.includes(name));
+    } else {
+      filteredData = data;
+    }
+
+    setFilterdata(filteredData);
+  };
 
   const addData = (newData: DataContext) => {
     setData((prevData) => [...prevData, newData]);
+    setFilterdata((prevData) => [...prevData, newData]);
+
+    console.log("เพิ่มข้อมูลสำเร็จ");
   };
 
   const deleteDatasorf = (idData: number) => {
@@ -65,6 +84,12 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         item.id === idData ? { ...item, deletestatus: true } : item
       )
     );
+    setFilterdata((prevData) =>
+      prevData.map((item) =>
+        item.id === idData ? { ...item, deletestatus: true } : item
+      )
+    );
+    console.log("SordDelete สำเร็จ");
   };
 
   const unsorfdelete = (idData: number) => {
@@ -73,25 +98,32 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         item.id === idData ? { ...item, deletestatus: false } : item
       )
     );
+    setFilterdata((prevData) =>
+      prevData.map((item) =>
+        item.id === idData ? { ...item, deletestatus: false } : item
+      )
+    );
+    console.log("UnSordDelete สำเร็จ");
   };
 
   const deleteDatahard = (iddata: number) => {
     setData((prevData) => prevData.filter((item) => item.id !== iddata));
+    setFilterdata((prevData) => prevData.filter((item) => item.id !== iddata));
+    console.log("Delete ข้อมูลสำเร็จ");
   };
 
   const editData = (id: number, updatedData: DataContext) => {
-    setData((prevData) => {
-      const updatedDataIndex = prevData.findIndex((item) => item.id === id);
-      if (updatedDataIndex !== -1) {
-        return prevData.map((item, index) => {
-          if (index === updatedDataIndex) {
-            return { ...item, ...updatedData };
-          }
-          return item;
-        });
-      }
-      return prevData;
-    });
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.id === id ? { ...item, ...updatedData } : item
+      )
+    );
+    setFilterdata((prevFilterData) =>
+      prevFilterData.map((item) =>
+        item.id === id ? { ...item, ...updatedData } : item
+      )
+    );
+    console.log("Edit สำเร็จ");
   };
 
   return (
@@ -103,6 +135,8 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         editData,
         deleteDatahard,
         unsorfdelete,
+        filterdata,
+        FilterData,
       }}
     >
       {children}

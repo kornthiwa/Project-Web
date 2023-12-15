@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteDialog from "./deleteComponent";
 import FormEdidDialog from "./edidComponent";
 import CardDialog from "./cardComponents";
-import { Button, Switch } from "@mui/material";
+import { Box, Button, Switch } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
 const columns: GridColDef[] = [
@@ -207,7 +207,6 @@ const columns: GridColDef[] = [
           <DeleteDialog
             id={row.id}
             name={row.name}
-            age={row.age}
             mail={row.mail}
             file={row.file}
             dateat={row.dateat}
@@ -219,24 +218,28 @@ const columns: GridColDef[] = [
   },
 ];
 
+
 export default function TableComponents() {
-  const { data } = useMyContext();
-  const tabledata = data.filter((num) => num.deletestatus !== true);
+  const { data ,filterdata} = useMyContext();
+  const filter = filterdata.filter((num) => num.deletestatus !== true);
+
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
-      <DataGrid
-        rows={tabledata}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection={false}
-        rowSelection
-      />
-    </div>
+    <Box style={{ height: 400, width: "100%" }}>
+  <DataGrid
+  rows={filter}
+  columns={columns}
+  initialState={{
+    pagination: {
+      paginationModel: { page: 0, pageSize: 5 },
+    },
+  }}
+  pageSizeOptions={[5, 10]}
+  checkboxSelection={false}
+  rowSelection
+/>
+
+     
+    </Box>
   );
 }

@@ -17,11 +17,10 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 interface PropsData {
   id: number;
-  name: string;
-  age: number;
-  mail: string;
-  file: string | undefined;
-  dateat: string;
+  name?: string;
+  mail?: string;
+  file?: string | undefined;
+  dateat?: string;
   checked: boolean;
 }
 export default function DeleteDialog(props: PropsData) {

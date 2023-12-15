@@ -14,7 +14,7 @@ export default function Home() {
     <>
     <Box sx={{ bgcolor: "blue", width: "full", height: "full" }}>
       <Box sx={{ width: "auto", height: "auto", bgcolor: "white", margin: 3 }}>
-        <TableComponents />
+        {/* <TableComponents /> */}
         <FormDialog />
         <TabsComponent />
       </Box>

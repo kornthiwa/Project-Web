@@ -110,7 +110,7 @@ export default function FormEdidDialog(props: PropsData) {
               variant="outlined"
               type="text"
               onChange={formik.handleChange}
-              value={props.name}
+              value={formik.values.name}
             />
           </Box>
           <Box margin={2}>
@@ -121,7 +121,7 @@ export default function FormEdidDialog(props: PropsData) {
               variant="outlined"
               type="email"
               onChange={formik.handleChange}
-              value={props.email}
+              value={formik.values.email}
             />
           </Box>
           <Box margin={2}>
@@ -132,7 +132,7 @@ export default function FormEdidDialog(props: PropsData) {
               variant="outlined"
               type="text"
               onChange={formik.handleChange}
-              value={props.type}
+              value={formik.values.type}
             />
           </Box>
 
@@ -163,7 +163,7 @@ export default function FormEdidDialog(props: PropsData) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={props.status}
+              value={formik.values.status}
               fullWidth
               onChange={(event) =>
                 formik.setFieldValue("status", event.target.value)
@@ -180,7 +180,7 @@ export default function FormEdidDialog(props: PropsData) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={props.priority}
+              value={formik.values.priority}
               fullWidth
               onChange={(event) =>
                 formik.setFieldValue("priority", event.target.value)
