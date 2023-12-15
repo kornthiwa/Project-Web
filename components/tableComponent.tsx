@@ -235,7 +235,6 @@ export default function TableComponents() {
   />
   
 
-  <Pagination count={10} variant="outlined" color="secondary" />
 </Box>
 
   
