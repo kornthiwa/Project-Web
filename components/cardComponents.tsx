@@ -71,8 +71,6 @@ export default function CardDialog(props: PropsCard) {
                       alignItems: 'center',
                       display: 'flex',
                       '&:hover': {
-                        // ระบุสไตล์ที่ต้องการแสดงเมื่อ hover
-                        // เช่น เพิ่มสีพื้นหลังหรือเปลี่ยนสีตัวอักษร
                         backgroundColor: 'red',
                       },
                     }}
@@ -85,7 +83,7 @@ export default function CardDialog(props: PropsCard) {
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <Typography gutterBottom variant="h5" component="div">
-                      <Box>Name</Box>
+                      <Box>ToDo</Box>
                       <Box>{props.name}</Box>
                     </Typography>
                   </Grid>

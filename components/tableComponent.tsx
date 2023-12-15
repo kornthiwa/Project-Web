@@ -40,8 +40,8 @@ const columns: GridColDef[] = [
     headerAlign: "center",
   },
   {
-    field: "name",
-    headerName: "Name",
+    field: "todo",
+    headerName: "ToDo",
     width: 150,
     disableColumnMenu: true,
     align: "center",
@@ -163,7 +163,7 @@ const columns: GridColDef[] = [
         <>
           <FormEdidDialog
             id={row.id}
-            name={row.name}
+            todo={row.todo}
             email={row.email}
             image={row.image}
             status={row.status}

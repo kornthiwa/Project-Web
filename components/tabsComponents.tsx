@@ -54,18 +54,6 @@ function a11yProps(index: number) {
 }
 
 
-interface DataContext {
-  active?: boolean;
-  id?: number;
-  name?: string;
-  email?: string;
-  creactedat?: Date;
-  updatedat?: Date;
-  priority: number;
-  type?: string;
-  image?: File | null;
-  status?: number;
-  deletestatus?: boolean;}
 
 export default function TabsComponent() {
   const [value, setValue] = React.useState<number>(0);
@@ -73,7 +61,7 @@ export default function TabsComponent() {
   const [selectedDelelte, setSelectedDelelte] = useState<number[]>([]);
   const [checked, setChecked] = React.useState(true);
   const [open, setOpen] = React.useState(false);
-  const fulldata = data.map((user) => user.name);
+  const fulldata = data.map((user) => user.todo);
 
 
 
@@ -154,7 +142,7 @@ export default function TabsComponent() {
                 ID: {filteredItem.id}
               </Grid>
               <Grid item xs={1}>
-                Name: {filteredItem.name}
+                Todo: {filteredItem.todo}
               </Grid>
               
               <Grid item xs={2}>
@@ -210,7 +198,7 @@ export default function TabsComponent() {
                 ID: {filteredItem.id}
               </Grid>
               <Grid item xs={1}>
-                Name: {filteredItem.name}
+                Todo: {filteredItem.todo}
               </Grid>
               
               <Grid item xs={2}>
@@ -266,7 +254,7 @@ export default function TabsComponent() {
                 ID: {filteredItem.id}
               </Grid>
               <Grid item xs={1}>
-                Name: {filteredItem.name}
+                Todo: {filteredItem.todo}
               </Grid>
               
               <Grid item xs={2}>
@@ -346,7 +334,7 @@ export default function TabsComponent() {
                 ID: {filteredItem.id}
               </Grid>
               <Grid item xs={1}>
-                Name: {filteredItem.name}
+                Todo: {filteredItem.todo}
               </Grid>
              
               <Grid item xs={2}>

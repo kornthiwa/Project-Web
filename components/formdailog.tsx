@@ -15,7 +15,7 @@ import { FileUploadOutlined } from "@mui/icons-material";
 interface PropsData {
   active: boolean;
   id: number;
-  name: string;
+  todo: string;
   creactedat: Date;
   updatedat?: Date;
   priority: number;
@@ -45,7 +45,7 @@ export default function FormDialog() {
     initialValues: {
       active: false,
       id: 0,
-      name: "",
+      todo: "",
       creactedat: new Date(),
       priority: 1,
       type: "",
@@ -58,7 +58,7 @@ export default function FormDialog() {
       const newData: PropsData = {
         active: values.active,
         id: data.length + 1,
-        name: values.name,
+        todo: values.todo,
         creactedat: new Date(),
         priority: values.priority,
         type: values.type,
@@ -117,9 +117,9 @@ export default function FormDialog() {
               variant="outlined"
               type="text"
               onChange={formik.handleChange}
-              value={formik.values.name}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
+              value={formik.values.todo}
+              error={formik.touched.todo && Boolean(formik.errors.todo)}
+              helperText={formik.touched.todo && formik.errors.todo}
             />
           </Box>
 

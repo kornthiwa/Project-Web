@@ -1,18 +1,11 @@
 // context.tsx
 import React from "react";
-import {
-  createContext,
-  useContext,
-  FC,
-  ReactNode,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { createContext, useContext, FC, ReactNode } from "react";
 
 interface DataContext {
   active: boolean;
   id: number;
-  name: string;
+  todo: string;
   creactedat?: Date;
   updatedat?: Date;
   priority: number;
@@ -32,7 +25,7 @@ interface MyContextProps {
   deleteDatahard: (id: number) => void;
   unsorfdelete: (id: number) => void;
   FilterData: (name: string) => void;
-  generateRandomDataContext:()=>void;
+  generateRandomDataContext: () => void;
 }
 
 const MyContext = createContext<MyContextProps | undefined>(undefined);
@@ -42,7 +35,6 @@ interface MyProviderProps {
 }
 
 export const MyProvider: FC<MyProviderProps> = ({ children }) => {
-
   const [data, setData] = React.useState<DataContext[]>([]);
   const [filterdata, setFilterdata] = React.useState<DataContext[]>([]);
 
@@ -50,7 +42,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
     let filteredData;
 
     if (name) {
-      filteredData = data.filter((item) => item.name.includes(name));
+      filteredData = data.filter((item) => item.todo.includes(name));
     } else {
       filteredData = data;
     }
@@ -59,12 +51,12 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
   };
   const generateRandomDataContext = (): DataContext[] => {
     const randomData: DataContext[] = [];
-  
+
     for (let i = 1; i <= 100; i++) {
       const newData: DataContext = {
         active: Math.random() < 0.5,
         id: i,
-        name: `User ${i}`,
+        todo: `User${i}`,
         creactedat: new Date(),
         updatedat: new Date(),
         priority: Math.floor(Math.random() * 3) + 1,
@@ -73,18 +65,15 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         status: Math.random() < 0.33 ? 10 : Math.random() < 0.66 ? 20 : 30,
         deletestatus: Math.random() < 0.2,
       };
-  
+
       randomData.push(newData);
     }
-  
-    // เพิ่มข้อมูลเข้า state
+
     setData((prevData) => [...prevData, ...randomData]);
     setFilterdata((prevData) => [...prevData, ...randomData]);
-  
-    // คืนค่าข้อมูลสุ่มทั้งหมด
     return randomData;
   };
-  
+
   const addData = (newData: DataContext) => {
     setData((prevData) => [...prevData, newData]);
     setFilterdata((prevData) => [...prevData, newData]);
@@ -151,7 +140,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         unsorfdelete,
         filterdata,
         FilterData,
-        generateRandomDataContext
+        generateRandomDataContext,
       }}
     >
       {children}
