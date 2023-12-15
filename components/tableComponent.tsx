@@ -7,6 +7,8 @@ import CardDialog from "./cardComponents";
 import { Box, Button, Switch } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
+import Pagination from '@mui/material/Pagination';
+
 const columns: GridColDef[] = [
   {
     field: "active",
@@ -45,14 +47,7 @@ const columns: GridColDef[] = [
     align: "center",
     headerAlign: "center",
   },
-  {
-    field: "email",
-    headerName: "Email",
-    width: 150,
-    disableColumnMenu: true,
-    align: "center",
-    headerAlign: "center",
-  },
+ 
   {
     field: "creactedat",
     headerName: "Createdat",
@@ -143,7 +138,6 @@ const columns: GridColDef[] = [
           <CardDialog
             id={row.id}
             name={row.name}
-            email={row.email}
             priority={row.priority}
             type={row.type}
             image={row.image}
@@ -224,8 +218,9 @@ export default function TableComponents() {
   const filter = filterdata.filter((num) => num.deletestatus !== true);
 
 
-  return (
-    <Box style={{ height: 400, width: "100%" }}>
+  return (<>
+  
+  <Box style={{ height: 400, width: "100%" }}>
   <DataGrid
   rows={filter}
   columns={columns}
@@ -237,9 +232,14 @@ export default function TableComponents() {
   pageSizeOptions={[5, 10]}
   checkboxSelection={false}
   rowSelection
-/>
+  />
+  
 
-     
-    </Box>
+  <Pagination count={10} variant="outlined" color="secondary" />
+</Box>
+
+  
+  
+          </>
   );
 }

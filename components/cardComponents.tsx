@@ -16,7 +16,6 @@ interface PropsCard {
   active?: boolean;
   id: number;
   name: string;
-  email: string;
   creactedat?: Date;
   updatedat?: Date;
   priority: number;
@@ -90,12 +89,7 @@ export default function CardDialog(props: PropsCard) {
                       <Box>{props.name}</Box>
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography variant="h5" color="text.secondary">
-                      <Box>Email</Box>
-                      <Box>{props.email}</Box>
-                    </Typography>
-                  </Grid>
+                 
                   <Grid item xs={4}>
                     <Typography variant="body2" color="text.secondary">
                       <Box>CreactedAT</Box>

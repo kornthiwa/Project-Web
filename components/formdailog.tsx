@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -15,7 +16,6 @@ interface PropsData {
   active: boolean;
   id: number;
   name: string;
-  email: string;
   creactedat: Date;
   updatedat?: Date;
   priority: number;
@@ -27,14 +27,25 @@ interface PropsData {
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
-  const { data, addData } = useMyContext();
+  const { data, addData, generateRandomDataContext } = useMyContext();
+
+  const validationSchema = Yup.object({
+    active: Yup.boolean(),
+    name: Yup.string()
+      .required("Name is required")
+      .min(2, "Too Short!")
+      .max(50, "Too Long!"),
+    type: Yup.string()
+      .required("Type is required")
+      .min(2, "Too Short!")
+      .max(50, "Too Long!"),
+  });
 
   const formik = useFormik({
     initialValues: {
       active: false,
       id: 0,
       name: "",
-      email: "",
       creactedat: new Date(),
       priority: 1,
       type: "",
@@ -42,13 +53,12 @@ export default function FormDialog() {
       status: 10,
       deletestatus: false,
     },
-
+    validationSchema: validationSchema,
     onSubmit: (values: PropsData, { resetForm }) => {
       const newData: PropsData = {
         active: values.active,
         id: data.length + 1,
         name: values.name,
-        email: values.email,
         creactedat: new Date(),
         priority: values.priority,
         type: values.type,
@@ -56,16 +66,17 @@ export default function FormDialog() {
         status: values.status,
         deletestatus: values.deletestatus,
       };
-      console.log(newData);
 
       addData(newData);
       handleClose();
       resetForm();
     },
   });
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     formik.setFieldValue("active", event.target.checked);
   };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -84,6 +95,8 @@ export default function FormDialog() {
       <Button variant="outlined" onClick={handleClickOpen}>
         เพิ่มข้อมูล
       </Button>
+      <Button onClick={generateRandomDataContext}>Add Data 100 Row</Button>
+
       <Dialog open={open} fullWidth>
         <DialogTitle>Formข้อมูล</DialogTitle>
         <DialogContent>
@@ -105,19 +118,11 @@ export default function FormDialog() {
               type="text"
               onChange={formik.handleChange}
               value={formik.values.name}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
             />
           </Box>
-          <Box margin={2}>
-            <TextField
-              fullWidth
-              id="email"
-              label="Email"
-              variant="outlined"
-              type="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
-            />
-          </Box>
+
           <Box margin={2}>
             <TextField
               fullWidth
@@ -127,6 +132,8 @@ export default function FormDialog() {
               type="text"
               onChange={formik.handleChange}
               value={formik.values.type}
+              error={formik.touched.type && Boolean(formik.errors.type)}
+              helperText={formik.touched.type && formik.errors.type}
             />
           </Box>
 
@@ -155,6 +162,8 @@ export default function FormDialog() {
                   </IconButton>
                 ),
               }}
+              error={formik.touched.image && Boolean(formik.errors.image)}
+              helperText={formik.touched.image && formik.errors.image}
             />
           </Box>
           <Box margin={2}>
@@ -193,7 +202,10 @@ export default function FormDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={(e: any) => formik.handleSubmit(e)}>
+          <Button
+            onClick={(e: any) => formik.handleSubmit(e)}
+            disabled={!formik.isValid || formik.isSubmitting}
+          >
             Subscribe
           </Button>
         </DialogActions>

@@ -13,7 +13,6 @@ interface DataContext {
   active: boolean;
   id: number;
   name: string;
-  email: string;
   creactedat?: Date;
   updatedat?: Date;
   priority: number;
@@ -33,6 +32,7 @@ interface MyContextProps {
   deleteDatahard: (id: number) => void;
   unsorfdelete: (id: number) => void;
   FilterData: (name: string) => void;
+  generateRandomDataContext:()=>void;
 }
 
 const MyContext = createContext<MyContextProps | undefined>(undefined);
@@ -42,20 +42,7 @@ interface MyProviderProps {
 }
 
 export const MyProvider: FC<MyProviderProps> = ({ children }) => {
-  // const initialData: DataContext[] = [
-  //   { id: 1, name: 'John Doe', email: 'john@example.com', priority: 1, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 1, name: 'John Doe', email: 'john@example.com', priority: 1, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 2, name: 'Jane Doe', email: 'jane@example.com', priority: 2, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 3, name: 'John Doe', email: 'john@example.com', priority: 1, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 4, name: 'Jane Doe', email: 'jane@example.com', priority: 2, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 5, name: 'John Doe', email: 'john@example.com', priority: 1, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 6, name: 'Jane Doe', email: 'jane@example.com', priority: 2, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 7, name: 'John Doe', email: 'john@example.com', priority: 1, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 8, name: 'Jane Doe', email: 'jane@example.com', priority: 2, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 9, name: 'John Doe', email: 'john@example.com', priority: 1, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 10, name: 'Jane Doe', email: 'jane@example.com', priority: 2, type: 'User', image: null, status: 1, active: true, deletestatus: false },
-  //   { id: 11, name: 'Bob Smith', email: 'bob@example.com', priority: 3, type: 'Admin', image: null, status: 1, active: true, deletestatus: false },
-  // ];
+
   const [data, setData] = React.useState<DataContext[]>([]);
   const [filterdata, setFilterdata] = React.useState<DataContext[]>([]);
 
@@ -70,7 +57,34 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
 
     setFilterdata(filteredData);
   };
-
+  const generateRandomDataContext = (): DataContext[] => {
+    const randomData: DataContext[] = [];
+  
+    for (let i = 1; i <= 100; i++) {
+      const newData: DataContext = {
+        active: Math.random() < 0.5,
+        id: i,
+        name: `User ${i}`,
+        creactedat: new Date(),
+        updatedat: new Date(),
+        priority: Math.floor(Math.random() * 3) + 1,
+        type: Math.random() < 0.5 ? "User" : "Admin",
+        image: null,
+        status: Math.random() < 0.33 ? 10 : Math.random() < 0.66 ? 20 : 30,
+        deletestatus: Math.random() < 0.2,
+      };
+  
+      randomData.push(newData);
+    }
+  
+    // เพิ่มข้อมูลเข้า state
+    setData((prevData) => [...prevData, ...randomData]);
+    setFilterdata((prevData) => [...prevData, ...randomData]);
+  
+    // คืนค่าข้อมูลสุ่มทั้งหมด
+    return randomData;
+  };
+  
   const addData = (newData: DataContext) => {
     setData((prevData) => [...prevData, newData]);
     setFilterdata((prevData) => [...prevData, newData]);
@@ -137,6 +151,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         unsorfdelete,
         filterdata,
         FilterData,
+        generateRandomDataContext
       }}
     >
       {children}

@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useMyContext } from "../Context/dataContext";
 import {
   Box,
@@ -35,6 +36,18 @@ export default function FormEdidDialog(props: PropsData) {
   const [open, setOpen] = React.useState(false);
   const { data, addData, editData } = useMyContext();
 
+  const validationSchema = Yup.object({
+    active: Yup.boolean(),
+    name: Yup.string()
+      .required("Name is required")
+      .min(2, "Too Short!")
+      .max(50, "Too Long!"),
+    type: Yup.string()
+      .required("Type is required")
+      .min(2, "Too Short!")
+      .max(50, "Too Long!"),
+  });
+
   const formik = useFormik({
     initialValues: {
       active: props.active,
@@ -48,6 +61,7 @@ export default function FormEdidDialog(props: PropsData) {
       type: props.type,
       deletestatus: props.deletestatus,
     },
+    validationSchema: validationSchema,
 
     onSubmit: (values: PropsData) => {
       const editedData: PropsData = {
@@ -111,19 +125,11 @@ export default function FormEdidDialog(props: PropsData) {
               type="text"
               onChange={formik.handleChange}
               value={formik.values.name}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
             />
           </Box>
-          <Box margin={2}>
-            <TextField
-              fullWidth
-              id="email"
-              label="Email"
-              variant="outlined"
-              type="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
-            />
-          </Box>
+
           <Box margin={2}>
             <TextField
               fullWidth
@@ -133,6 +139,8 @@ export default function FormEdidDialog(props: PropsData) {
               type="text"
               onChange={formik.handleChange}
               value={formik.values.type}
+              error={formik.touched.type && Boolean(formik.errors.type)}
+              helperText={formik.touched.type && formik.errors.type}
             />
           </Box>
 
@@ -194,7 +202,10 @@ export default function FormEdidDialog(props: PropsData) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={(e: any) => formik.handleSubmit(e)}>
+          <Button
+            onClick={(e: any) => formik.handleSubmit(e)}
+            disabled={!formik.isValid || formik.isSubmitting}
+          >
             Subscribe
           </Button>
         </DialogActions>

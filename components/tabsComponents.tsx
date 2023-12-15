@@ -156,9 +156,7 @@ export default function TabsComponent() {
               <Grid item xs={1}>
                 Name: {filteredItem.name}
               </Grid>
-              <Grid item xs={2}>
-                Email: {filteredItem.email}
-              </Grid>
+              
               <Grid item xs={2}>
                 Createdat: {filteredItem.creactedat?.toDateString()}
               </Grid>
@@ -214,9 +212,7 @@ export default function TabsComponent() {
               <Grid item xs={1}>
                 Name: {filteredItem.name}
               </Grid>
-              <Grid item xs={2}>
-                Email: {filteredItem.email}
-              </Grid>
+              
               <Grid item xs={2}>
                 Createdat: {filteredItem.creactedat?.toDateString()}
               </Grid>
@@ -272,9 +268,7 @@ export default function TabsComponent() {
               <Grid item xs={1}>
                 Name: {filteredItem.name}
               </Grid>
-              <Grid item xs={2}>
-                Email: {filteredItem.email}
-              </Grid>
+              
               <Grid item xs={2}>
                 Createdat: {filteredItem.creactedat?.toDateString()}
               </Grid>
@@ -354,9 +348,7 @@ export default function TabsComponent() {
               <Grid item xs={1}>
                 Name: {filteredItem.name}
               </Grid>
-              <Grid item xs={1}>
-                Email: {filteredItem.email}
-              </Grid>
+             
               <Grid item xs={2}>
                 Createdat: {filteredItem.creactedat?.toDateString()}
               </Grid>
