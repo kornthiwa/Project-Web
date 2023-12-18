@@ -50,23 +50,19 @@ function a11yProps(index: number) {
   };
 }
 
-
-
 export default function TabsComponent() {
-  const { data, deleteDatahard, unsorfdelete ,FilterData,filterdata} = useMyContext();
+  const { data, deleteDatahard, unsorfdelete, FilterData, filterdata } =
+    useMyContext();
   const [value, setValue] = React.useState<number>(0);
   const [selectedDelelte, setSelectedDelelte] = useState<number[]>([]);
   const [checked, setChecked] = React.useState(true);
   const [open, setOpen] = React.useState(false);
   const fulldata = data.map((user) => user.todo);
 
-
-
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  
+
   const switchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
@@ -111,187 +107,37 @@ export default function TabsComponent() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-      <Autocomplete
-  options={fulldata}
-  // value={}
-  onChange={(event, value) => FilterData(value as string)}
-  onInputChange={(event, value) => FilterData(value as string)}
-  renderInput={(params) => (
-    <TextField {...params} label="Select" />
-  )}
-/>
-
-      
+        <Autocomplete
+          options={fulldata}
+          // value={}
+          onChange={(event, value) => FilterData(value as string)}
+          onInputChange={(event, value) => FilterData(value as string)}
+          renderInput={(params) => <TextField {...params} label="Select" />}
+        />
 
         <TableComponents />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        {data
-          .filter((item) => item.status === 10 && item.deletestatus === false)
-          .map((filteredItem) => (
-            <Grid
-              container
-              spacing={2}
-              key={filteredItem.id}
-              textAlign="left"
-              margin={1}
-            >
-              <Grid item xs={1}>
-                ID: {filteredItem.id}
-              </Grid>
-              <Grid item xs={1}>
-                Todo: {filteredItem.todo}
-              </Grid>
-              
-              <Grid item xs={2}>
-                Createdat: {filteredItem.creactedat?.toDateString()}
-              </Grid>
-              <Grid item xs={2}>
-                Updatedat: {filteredItem.updatedat?.toDateString()}
-              </Grid>
-              <Grid item xs={1}>
-                Type: {filteredItem.type}
-              </Grid>
-              <Grid item xs={1}>
-                Priority:{" "}
-                {filteredItem.priority === 1 && (
-                  <PriorityHighIcon color="disabled" />
-                )}
-                {filteredItem.priority === 2 && (
-                  <PriorityHighIcon color="primary" />
-                )}
-                {filteredItem.priority === 3 && (
-                  <PriorityHighIcon color="error" />
-                )}
-              </Grid>
-              <Grid item xs={2}>
-                Status:{" "}
-                {filteredItem.status === 10 && (
-                  <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-                )}
-                {filteredItem.status === 20 && (
-                  <Button variant="contained">กำลังกรอกข้อมูล</Button>
-                )}
-                {filteredItem.status === 30 && (
-                  <Button variant="contained" color="success">
-                    กรอกข้อมูลสำเร็จ
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          ))}
+        <TableComponents
+          data={filterdata.filter(
+            (item) => item.status === 10 && item.deletestatus === false
+          )}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        {data
-          .filter((item) => item.status === 20 && item.deletestatus === false)
-          .map((filteredItem) => (
-            <Grid
-              container
-              spacing={2}
-              key={filteredItem.id}
-              textAlign="left"
-              margin={1}
-            >
-              <Grid item xs={1}>
-                ID: {filteredItem.id}
-              </Grid>
-              <Grid item xs={1}>
-                Todo: {filteredItem.todo}
-              </Grid>
-              
-              <Grid item xs={2}>
-                Createdat: {filteredItem.creactedat?.toDateString()}
-              </Grid>
-              <Grid item xs={2}>
-                Updatedat: {filteredItem.updatedat?.toDateString()}
-              </Grid>
-              <Grid item xs={1}>
-                Type: {filteredItem.type}
-              </Grid>
-              <Grid item xs={1}>
-                Priority:{" "}
-                {filteredItem.priority === 1 && (
-                  <PriorityHighIcon color="disabled" />
-                )}
-                {filteredItem.priority === 2 && (
-                  <PriorityHighIcon color="primary" />
-                )}
-                {filteredItem.priority === 3 && (
-                  <PriorityHighIcon color="error" />
-                )}
-              </Grid>
-              <Grid item xs={2}>
-                Status:{" "}
-                {filteredItem.status === 10 && (
-                  <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-                )}
-                {filteredItem.status === 20 && (
-                  <Button variant="contained">กำลังกรอกข้อมูล</Button>
-                )}
-                {filteredItem.status === 30 && (
-                  <Button variant="contained" color="success">
-                    กรอกข้อมูลสำเร็จ
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          ))}
+      <TableComponents
+          data={filterdata.filter(
+            (item) => item.status === 20 && item.deletestatus === false
+          )}
+        />
+
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        {data
-          .filter((item) => item.status === 30 && item.deletestatus === false)
-          .map((filteredItem) => (
-            <Grid
-              container
-              spacing={2}
-              key={filteredItem.id}
-              textAlign="left"
-              margin={1}
-            >
-              <Grid item xs={1}>
-                ID: {filteredItem.id}
-              </Grid>
-              <Grid item xs={1}>
-                Todo: {filteredItem.todo}
-              </Grid>
-              
-              <Grid item xs={2}>
-                Createdat: {filteredItem.creactedat?.toDateString()}
-              </Grid>
-              <Grid item xs={2}>
-                Updatedat: {filteredItem.updatedat?.toDateString()}
-              </Grid>
-              <Grid item xs={1}>
-                Type: {filteredItem.type}
-              </Grid>
-              <Grid item xs={1}>
-                Priority:{" "}
-                {filteredItem.priority === 1 && (
-                  <PriorityHighIcon color="disabled" />
-                )}
-                {filteredItem.priority === 2 && (
-                  <PriorityHighIcon color="primary" />
-                )}
-                {filteredItem.priority === 3 && (
-                  <PriorityHighIcon color="error" />
-                )}
-              </Grid>
-              <Grid item xs={2}>
-                Status:{" "}
-                {filteredItem.status === 10 && (
-                  <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-                )}
-                {filteredItem.status === 20 && (
-                  <Button variant="contained">กำลังกรอกข้อมูล</Button>
-                )}
-                {filteredItem.status === 30 && (
-                  <Button variant="contained" color="success">
-                    กรอกข้อมูลสำเร็จ
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          ))}
+      <TableComponents
+          data={filterdata.filter(
+            (item) => item.status === 30 && item.deletestatus === false
+          )}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
         <Switch
@@ -313,7 +159,11 @@ export default function TabsComponent() {
           </Button>
         )}{" "}
         <Snackbars opensn={open} />
-        {data
+        <TableComponents
+          data={filterdata.filter((item) => item.deletestatus === true
+          )}
+        />
+        {/* {data
           .filter((item) => item.deletestatus === true)
           .map((filteredItem) => (
             <Grid
@@ -334,7 +184,7 @@ export default function TabsComponent() {
               <Grid item xs={1}>
                 Todo: {filteredItem.todo}
               </Grid>
-             
+
               <Grid item xs={2}>
                 Createdat: {filteredItem.creactedat?.toDateString()}
               </Grid>
@@ -371,7 +221,7 @@ export default function TabsComponent() {
                 )}
               </Grid>
             </Grid>
-          ))}
+          ))} */}
       </CustomTabPanel>
     </Box>
   );

@@ -7,7 +7,7 @@ import CardDialog from "./cardComponents";
 import { Box, Button, Switch } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
-import Pagination from '@mui/material/Pagination';
+import Pagination from "@mui/material/Pagination";
 
 const columns: GridColDef[] = [
   {
@@ -47,7 +47,7 @@ const columns: GridColDef[] = [
     align: "center",
     headerAlign: "center",
   },
- 
+
   {
     field: "creactedat",
     headerName: "Createdat",
@@ -211,34 +211,43 @@ const columns: GridColDef[] = [
     },
   },
 ];
+interface DataContext {
+  active: boolean;
+  id: number;
+  todo: string;
+  creactedat?: Date;
+  updatedat?: Date;
+  priority: number;
+  type: string;
+  image: File | null;
+  status: number;
+  deletestatus: boolean;
+}
+interface PropsDataContext {
+  data?: DataContext[]; // Change the type to an array of DataContext
+}
 
-
-export default function TableComponents() {
-  const { data ,filterdata} = useMyContext();
+export default function TableComponents(props: PropsDataContext) {
+  const { filterdata } = useMyContext();
   const filter = filterdata.filter((num) => num.deletestatus !== true);
 
-
-  return (<>
-  
-  <Box style={{ height: 400, width: "100%" }}>
-  <DataGrid
-  rows={filter}
-  columns={columns}
-  initialState={{
-    pagination: {
-      paginationModel: { page: 0, pageSize: 5 },
-    },
-  }}
-  pageSizeOptions={[5, 10]}
-  checkboxSelection={false}
-  rowSelection
-  />
-  
-
-</Box>
-
-  
-  
-          </>
+  return (
+    <>
+      <Box style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={props.data || filter} 
+          columns={columns}
+          getRowId={(row) => row.id}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection={false}
+          rowSelection
+        />
+      </Box>
+    </>
   );
 }
