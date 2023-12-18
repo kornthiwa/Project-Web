@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import FormDialog from "@/components/formdailog";
 import TabsComponent from "@/components/tabsComponents";
 export default function Home() {
-
   return (
     <>
       <Box>

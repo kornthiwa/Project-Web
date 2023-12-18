@@ -7,7 +7,6 @@ import CardDialog from "./cardComponents";
 import { Box, Button, Switch } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
-import Pagination from "@mui/material/Pagination";
 
 const columns: GridColDef[] = [
   {
@@ -216,7 +215,7 @@ interface DataContext {
   deletestatus: boolean;
 }
 interface PropsDataContext {
-  data?: DataContext[]; // Change the type to an array of DataContext
+  data?: DataContext[]; 
 }
 
 export default function TableComponents(props: PropsDataContext) {

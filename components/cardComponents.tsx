@@ -81,8 +81,8 @@ export default function CardDialog(props: PropsCard) {
               </Grid>
               <Grid item xs={12} md={12}>
                 <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Typography gutterBottom variant="h5" component="div">
+                  <Grid item xs={12}>
+                    <Typography gutterBottom variant="body2" component="div">
                       <Box>ToDo</Box>
                       <Box>{props.name}</Box>
                     </Typography>
@@ -114,7 +114,6 @@ export default function CardDialog(props: PropsCard) {
                       )}
                       {props.priority === 3 && (
                         <>
-                          {" "}
                           <PriorityHighIcon color="error" />
                           High
                         </>
