@@ -14,8 +14,6 @@ export default function Home() {
             margin: 10,
             boxShadow: 3,
             padding: 3,
-            overflowX: "auto",
-            overflowY: "auto",
           }}
         >
           <FormDialog />
