@@ -79,6 +79,8 @@ export default function FormEdidDialog(props: PropsData) {
 
       editData(props.id, editedData);
       handleClose();
+      resetForm();
+
     },
   });
 
@@ -119,7 +121,7 @@ export default function FormEdidDialog(props: PropsData) {
           <Box margin={2}>
             <TextField
               fullWidth
-              id="name"
+              id="todo"
               label="Name"
               variant="outlined"
               type="text"
@@ -213,3 +215,7 @@ export default function FormEdidDialog(props: PropsData) {
     </>
   );
 }
+function resetForm() {
+  throw new Error("Function not implemented.");
+}
+

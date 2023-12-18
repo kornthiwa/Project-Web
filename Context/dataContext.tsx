@@ -1,5 +1,5 @@
 // context.tsx
-import React from "react";
+import React, { useCallback } from "react";
 import { createContext, useContext, FC, ReactNode } from "react";
 
 interface DataContext {
@@ -74,12 +74,17 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
     return randomData;
   };
 
-  const addData = (newData: DataContext) => {
-    setData((prevData) => [...prevData, newData]);
-    setFilterdata((prevData) => [...prevData, newData]);
+  const addData = useCallback(
+    (newData: DataContext) => {
+      if (!newData.todo) {
+        throw new Error("Todo is required");
+      }
 
-    console.log("เพิ่มข้อมูลสำเร็จ");
-  };
+      setData((prevData) => [...prevData, newData]);
+      setFilterdata((prevFilterData) => [...prevFilterData, newData]);
+    },
+    [] 
+  );
 
   const deleteDatasorf = (idData: number) => {
     setData((prevData) =>
