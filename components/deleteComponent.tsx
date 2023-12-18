@@ -46,39 +46,45 @@ export default function DeleteDialog(props: PropsData) {
   };
 
   return (
-    <React.Fragment>
-      <Button
-        variant="outlined"
-        startIcon={<DeleteIcon />}
-        onClick={handleClickOpen}
-        color="error"
-      >
-        Delete
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {checked ? "HardDelete" : "Delete"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description"></DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            onClick={() => {
-              handleConfirmButtonClick(props.id);
-            }}
-            autoFocus
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+    <>
+    <Button
+      variant="outlined"
+      startIcon={<DeleteIcon />}
+      onClick={handleClickOpen}
+      color="error" // Make sure this color matches your theme
+    >
+      Delete
+    </Button>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">
+        {checked ? "Hard Delete" : "Delete"}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you want to {checked ? "hard delete" : "delete"} this item?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button
+          onClick={() => {
+            handleConfirmButtonClick(props.id);
+          }}
+          color="primary"
+          autoFocus
+        >
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
+    </>
+  
   );
 }
