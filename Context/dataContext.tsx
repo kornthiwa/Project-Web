@@ -55,7 +55,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
     for (let i = 1; i <= 100; i++) {
       const newData: DataContext = {
         active: Math.random() < 0.5,
-        id: i,
+        id: data.length + i, 
         todo: `User${i}`,
         creactedat: new Date(),
         updatedat: new Date(),
@@ -65,6 +65,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         status: Math.random() < 0.33 ? 10 : Math.random() < 0.66 ? 20 : 30,
         deletestatus: Math.random() < 0.2,
       };
+  
 
       randomData.push(newData);
     }
