@@ -56,7 +56,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
       const newData: DataContext = {
         active: Math.random() < 0.5,
         id: data.length + i, 
-        todo: `User${i}`,
+        todo: `User${data.length+i}`,
         creactedat: new Date(),
         updatedat: new Date(),
         priority: Math.floor(Math.random() * 3) + 1,

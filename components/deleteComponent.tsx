@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useMyContext } from "@/Context/dataContext";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { Switch } from "@mui/material";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -21,7 +22,6 @@ interface PropsData {
   mail?: string;
   file?: string | undefined;
   dateat?: string;
-  checked: boolean;
 }
 export default function DeleteDialog(props: PropsData) {
   const [open, setOpen] = React.useState(false);
@@ -29,7 +29,6 @@ export default function DeleteDialog(props: PropsData) {
   const { deleteDatasorf, deleteDatahard } = useMyContext();
   const [checked, setChecked] = React.useState(true);
   const handleClickOpen = () => {
-    setChecked(props.checked);
     setOpen(true);
   };
 
@@ -40,20 +39,27 @@ export default function DeleteDialog(props: PropsData) {
       deleteDatasorf(id);
     }
   }
-
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
   const handleClose = () => {
     setOpen(false);
   };
 
   return (
     <>
+      <Switch
+            checked={checked}
+            onChange={handleChange}
+            inputProps={{ "aria-label": "controlled" }}
+          />
     <Button
       variant="outlined"
       startIcon={<DeleteIcon />}
       onClick={handleClickOpen}
-      color="error" // Make sure this color matches your theme
+      color="error"
     >
-      Delete
+     {checked? "Hard Delete" : "Delete"} 
     </Button>
     <Dialog
       open={open}

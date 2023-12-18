@@ -179,24 +179,17 @@ const columns: GridColDef[] = [
   {
     field: "delete",
     headerName: "Delete",
-    width: 200,
+    width: 250,
     align: "center",
     sortable: false,
     disableColumnMenu: true,
     headerAlign: "center",
     renderCell: (params) => {
       const { row } = params;
-      const [checked, setChecked] = React.useState(false);
-      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
-      };
+   
       return (
         <>
-          <Switch
-            checked={checked}
-            onChange={handleChange}
-            inputProps={{ "aria-label": "controlled" }}
-          />
+        
 
           <DeleteDialog
             id={row.id}
@@ -204,7 +197,6 @@ const columns: GridColDef[] = [
             mail={row.mail}
             file={row.file}
             dateat={row.dateat}
-            checked={checked}
           />
         </>
       );
@@ -243,7 +235,7 @@ export default function TableComponents(props: PropsDataContext) {
               paginationModel: { page: 0, pageSize: 5 },
             },
           }}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[5, 10,20,50]}
           checkboxSelection={false}
           rowSelection
         />
