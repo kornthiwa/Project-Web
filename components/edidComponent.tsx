@@ -62,8 +62,8 @@ export default function FormEdidDialog(props: PropsData) {
       deletestatus: props.deletestatus,
     },
     validationSchema: validationSchema,
+    onSubmit: (values: PropsData, { resetForm }) => {
 
-    onSubmit: (values: PropsData) => {
       const editedData: PropsData = {
         active: values.active,
         id: props.id,

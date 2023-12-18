@@ -80,10 +80,11 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         throw new Error("Todo is required");
       }
 
-      setData((prevData) => [...prevData, newData]);
+      setData((prevData) => [...prevData, newData]
+      );
       setFilterdata((prevFilterData) => [...prevFilterData, newData]);
     },
-    [] 
+    []
   );
 
   const deleteDatasorf = (idData: number) => {

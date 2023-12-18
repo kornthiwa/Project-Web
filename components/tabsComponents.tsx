@@ -6,6 +6,9 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useMyContext } from "@/Context/dataContext";
 import Grid from "@mui/material/Grid";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import Snackbars from "./snackbar";
+import TableComponents from "./tableComponent";
 import {
   Autocomplete,
   Button,
@@ -13,12 +16,6 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import Snackbars from "./snackbar";
-import DeleteDialog from "./deleteComponent";
-import CardDialog from "./cardComponents";
-import FormEdidDialog from "./edidComponent";
-import TableComponents from "./tableComponent";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -56,8 +53,8 @@ function a11yProps(index: number) {
 
 
 export default function TabsComponent() {
+  const { data, deleteDatahard, unsorfdelete ,FilterData,filterdata} = useMyContext();
   const [value, setValue] = React.useState<number>(0);
-  const { data, deleteDatasorf, deleteDatahard, unsorfdelete ,FilterData} = useMyContext();
   const [selectedDelelte, setSelectedDelelte] = useState<number[]>([]);
   const [checked, setChecked] = React.useState(true);
   const [open, setOpen] = React.useState(false);
@@ -114,15 +111,16 @@ export default function TabsComponent() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Autocomplete
-      options={fulldata}
-      // value={}
-      onChange={(even,value:any) => FilterData(value)}
-      onInputChange={(even,value)=>FilterData(value)}
-      renderInput={(params) => (
-        <TextField {...params} label="Select" />
-      )}
-    />
+      <Autocomplete
+  options={fulldata}
+  // value={}
+  onChange={(event, value) => FilterData(value as string)}
+  onInputChange={(event, value) => FilterData(value as string)}
+  renderInput={(params) => (
+    <TextField {...params} label="Select" />
+  )}
+/>
+
       
 
         <TableComponents />
