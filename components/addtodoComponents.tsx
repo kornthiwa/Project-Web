@@ -25,7 +25,7 @@ interface PropsData {
   deletestatus: boolean;
 }
 
-export default function FormDialog() {
+export default function AddtodoComponent() {
   const [open, setOpen] = React.useState(false);
   const { data, addData, generateRandomDataContext } = useMyContext();
 

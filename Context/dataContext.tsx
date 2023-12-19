@@ -102,7 +102,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
     console.log("SordDelete สำเร็จ");
   };
 
-  const unsorfdelete = (idData: number) => {
+  const unsorfdelete = (idData: number | number[]) => {
     setData((prevData) =>
       prevData.map((item) =>
         item.id === idData ? { ...item, deletestatus: false } : item
@@ -116,7 +116,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
     console.log("UnSordDelete สำเร็จ");
   };
 
-  const deleteDatahard = (iddata: number) => {
+  const deleteDatahard = (iddata: number| number[]) => {
     setData((prevData) => prevData.filter((item) => item.id !== iddata));
     setFilterdata((prevData) => prevData.filter((item) => item.id !== iddata));
     console.log("Delete ข้อมูลสำเร็จ");
