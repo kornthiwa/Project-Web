@@ -1,571 +1,324 @@
-// import * as React from "react";
-// import { useState } from "react";
-// import Tabs from "@mui/material/Tabs";
-// import Tab from "@mui/material/Tab";
-// import Typography from "@mui/material/Typography";
-// import Box from "@mui/material/Box";
-// import { useMyContext } from "@/Context/dataContext";
-// import Grid from "@mui/material/Grid";
-// import {
-//   Autocomplete,
-//   Button,
-//   Checkbox,
-//   Switch,
-//   TextField,
-// } from "@mui/material";
-// import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-// import Snackbars from "./snackbar";
-// import DeleteDialog from "./deleteComponent";
-// import CardDialog from "./cardComponents";
-// import FormEdidDialog from "./edidComponent";
+import * as React from "react";
+import * as Yup from "yup";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { useMyContext } from "@/Context/dataContext";
+import { useFormik } from "formik";
+import { Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select, TextField } from "@mui/material";
+import { FileUploadOutlined } from "@mui/icons-material";
 
-// interface TabPanelProps {
-//   children?: React.ReactNode;
-//   index: number;
-//   value: number | string;
-// }
+const steps = [
+  "Input",
+  "UpLoad",
+  "Save",
+];
+interface PropsData {
+    active: boolean;
+    id: number;
+    todo: string;
+    creactedat: Date;
+    updatedat?: Date;
+    priority: number;
+    type: string;
+    image: File | null;
+    status: number;
+    deletestatus: boolean;
+  }
+export default function TestComponent() {
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [skipped, setSkipped] = React.useState(new Set<number>());
 
-// function CustomTabPanel(props: TabPanelProps) {
-//   const { children, value, index, ...other } = props;
+  const isStepOptional = (step: number) => {
+    return step === 1;
+  };
 
-//   return (
-//     <div
-//       role="tabpanel"
-//       hidden={value !== index}
-//       id={`simple-tabpanel-${index}`}
-//       aria-labelledby={`simple-tab-${index}`}
-//       {...other}
-//     >
-//       {value === index && (
-//         <Box sx={{ p: 3 }}>
-//           <Typography component="samp">{children}</Typography>
-//         </Box>
-//       )}
-//     </div>
-//   );
-// }
+  const isStepSkipped = (step: number) => {
+    return skipped.has(step);
+  };
+  const [open, setOpen] = React.useState(false);
+  const { data, addData, generateRandomDataContext } = useMyContext();
 
-// function a11yProps(index: number) {
-//   return {
-//     id: `simple-tab-${index}`,
-//     "aria-controls": `simple-tabpanel-${index}`,
-//   };
-// }
+  const validationSchema = Yup.object({
+    active: Yup.boolean(),
+    todo: Yup.string()
+      .required("Name is required")
+      .min(2, "Too Short!")
+      .max(50, "Too Long!"),
+    type: Yup.string()
+      .required("Type is required")
+      .min(2, "Too Short!")
+      .max(50, "Too Long!"),
+  });
 
-// export default function TabsComponent() {
-//   const [value, setValue] = React.useState<number>(0);
-//   const { data, deleteDatasorf, deleteDatahard, unsorfdelete } = useMyContext();
-//   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-//   const [selectedDelelte, setSelectedDelelte] = useState<number[]>([]);
-//   const [checked, setChecked] = React.useState(true);
-//   const [open, setOpen] = React.useState(false);
-//   const fulldata = data.map((user) => user.name);
-//   const [selectedOption, setSelectedOption] = useState<any>();
+  const formik = useFormik({
+    initialValues: {
+      active: false,
+      id: 0,
+      todo: "",
+      creactedat: new Date(),
+      priority: 1,
+      type: "",
+      image: null,
+      status: 10,
+      deletestatus: false,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values: PropsData, { resetForm }) => {
+      const newData: PropsData = {
+        active: values.active,
+        id: data.length + 1,
+        todo: values.todo,
+        creactedat: new Date(),
+        priority: values.priority,
+        type: values.type,
+        image: values.image,
+        status: values.status,
+        deletestatus: values.deletestatus,
+      };
 
-//   const handleOptionChange = (event: any, value: any) => {
-//     // ตรวจสอบว่ามีค่าที่ถูกเลือกหรือไม่
-//     if (value) {
-//       // ทำการค้นหาค่าที่ต้องการ, ในที่นี้จะใช้ find เพื่อค้นหา object ที่มี id เท่ากับ value.id
-//       const foundItem = data.find((item) => item.name === value);
+      addData(newData);
+      handleReset()
+      handleClose();
+      resetForm();
+    },
+  });
 
-//       // ตรวจสอบว่าเจอหรือไม่
-//       if (foundItem) {
-//         // ทำสิ่งที่คุณต้องการกับ foundItem
-//         console.log("Found Item:", foundItem);
-//         setSelectedOption(foundItem);
-//       }
-//     }
-//   };
-//   const handleReset = () => {
-//     setSelectedOption(null);
-//   };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    formik.setFieldValue("active", event.target.checked);
+  };
 
-//   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-//     setValue(newValue);
-//   };
-//   const handleCheckboxChange = (id: number) => {
-//     if (selectedIds.includes(id)) {
-//       setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
-//     } else {
-//       setSelectedIds([...selectedIds, id]);
-//     }
-//   };
-//   const switchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     setChecked(event.target.checked);
-//   };
-//   const handleDelete = () => {
-//     selectedIds.forEach((id) => {
-//       deleteDatasorf(id);
-//     });
-//     console.log("Deleting items with IDs:", selectedIds);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-//     setSelectedIds([]);
-//   };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-//   const handleCheckboxChangeDelete = (id: number) => {
-//     if (selectedDelelte.includes(id)) {
-//       setSelectedDelelte(
-//         selectedDelelte.filter((selectedId) => selectedId !== id)
-//       );
-//     } else {
-//       setSelectedDelelte([...selectedDelelte, id]);
-//     }
-//   };
+  const handleFileChange = (event: any) => {
+    const file = event.target.files?.[0] || null;
+    formik.setFieldValue("image", file);
+  };
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
 
-//   const handleDeleteSorf = () => {
-//     selectedDelelte.forEach((id) => {
-//       {
-//         checked ? unsorfdelete(id) : deleteDatahard(id);
-//       }
-//     });
-//     setSelectedDelelte([]);
-//     setOpen(true);
-//     setTimeout(() => {
-//       setOpen(false);
-//       console.log("Deleting Sorf with IDs:", selectedDelelte);
-//       console.log(open);
-//     }, 2000);
-//   };
-//   return (
-//     <Box sx={{ width: "100%" }}>
-//       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-//         <Tabs
-//           value={value}
-//           onChange={handleChange}
-//           aria-label="basic tabs example"
-//         >
-//           <Tab label="ข้อมูลทั้งหมด" {...a11yProps(0)} />
-//           <Tab label="ยังไม่กรอกข้อมูล" {...a11yProps(1)} />
-//           <Tab label="กำลังกรอกข้อมูล" {...a11yProps(2)} />
-//           <Tab label="กรอกข้อมูลสำเร็จ" {...a11yProps(3)} />
-//           <Tab label="SoftDelete" {...a11yProps(4)} />
-//         </Tabs>
-//       </Box>
-//       <CustomTabPanel value={value} index={0}>
-//         <Button onClick={handleDelete}>delete</Button>
-//         <Autocomplete
-//           options={fulldata}
-//           getOptionLabel={(option) => option}
-//           renderInput={(params) => (
-//             <Box style={{ display: "flex", alignItems: "center" }}>
-//               <TextField {...params} label="Search" variant="outlined" />
-//               <Button
-//                 variant="outlined"
-//                 sx={{ marginLeft: 1 }}
-//                 onClick={handleReset}
-//               >
-//                 Reset
-//               </Button>
-//             </Box>
-//           )}
-//           onChange={handleOptionChange}
-//           value={selectedOption}
-//         />
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
 
-//         {selectedOption ? (
-//           <Grid container spacing={2} textAlign="left" margin={1}>
-//             <Checkbox
-//               checked={selectedIds.includes(selectedOption.id)}
-//               onChange={() => handleCheckboxChange(selectedOption.id)}
-//               inputProps={{ "aria-label": "controlled" }}
-//             />
-//             <Grid item xs={1}>
-//               ID: {selectedOption.id}
-//             </Grid>
-//             <Grid item xs={1}>
-//               Name: {selectedOption.name}
-//             </Grid>
-//             <Grid item xs={1}>
-//               Email: {selectedOption.email}
-//             </Grid>
-//             <Grid item xs={2}>
-//               Createdat: {selectedOption.createdat?.toDateString()}
-//             </Grid>
-//             <Grid item xs={2}>
-//               Updatedat: {selectedOption.updatedat?.toDateString()}
-//             </Grid>
-//             <Grid item xs={1}>
-//               Type: {selectedOption.type}
-//             </Grid>
-//             <Grid item xs={1}>
-//               Priority:
-//               {selectedOption.priority === 1 && (
-//                 <PriorityHighIcon color="disabled" />
-//               )}
-//               {selectedOption.priority === 2 && (
-//                 <PriorityHighIcon color="primary" />
-//               )}
-//               {selectedOption.priority === 3 && (
-//                 <PriorityHighIcon color="error" />
-//               )}
-//             </Grid>
-//             <Grid item xs={2}>
-//               Status:{" "}
-//               {selectedOption.status === 10 && (
-//                 <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-//               )}
-//               {selectedOption.status === 20 && (
-//                 <Button variant="contained">กำลังกรอกข้อมูล</Button>
-//               )}
-//               {selectedOption.status === 30 && (
-//                 <Button variant="contained" color="success">
-//                   กรอกข้อมูลสำเร็จ
-//                 </Button>
-//               )}
-//             </Grid>
-//           </Grid>
-//         ) : (
-//           data
-//             .filter((item) => item.deletestatus === false)
-//             .map((filteredItem) => (
-//               <Grid
-//                 container
-//                 spacing={2}
-//                 key={filteredItem.id}
-//                 textAlign="left"
-//                 margin={1}
-//               >
-//                 <Checkbox
-//                   checked={selectedIds.includes(filteredItem.id)}
-//                   onChange={() => handleCheckboxChange(filteredItem.id)}
-//                   inputProps={{ "aria-label": "controlled" }}
-//                 />
-//                 <Grid item xs={1}>
-//                   ID: {filteredItem.id}
-//                 </Grid>
-//                 <Grid item xs={1}>
-//                   Name: {filteredItem.name}
-//                 </Grid>
-//                 <Grid item xs={1}>
-//                   Email: {filteredItem.email}
-//                 </Grid>
-//                 <Grid item xs={2}>
-//                   Createdat: {filteredItem.creactedat?.toDateString()}
-//                 </Grid>
-//                 <Grid item xs={2}>
-//                   Updatedat: {filteredItem.updatedat?.toDateString()}
-//                 </Grid>
-//                 <Grid item xs={1}>
-//                   Type: {filteredItem.type}
-//                 </Grid>
-//                 <Grid item xs={1}>
-//                   Priority:
-//                   {filteredItem.priority === 1 && (
-//                     <PriorityHighIcon color="disabled" />
-//                   )}
-//                   {filteredItem.priority === 2 && (
-//                     <PriorityHighIcon color="primary" />
-//                   )}
-//                   {filteredItem.priority === 3 && (
-//                     <PriorityHighIcon color="error" />
-//                   )}
-//                 </Grid>
-//                 <Grid item xs={2}>
-//                   Status:{" "}
-//                   {filteredItem.status === 10 && (
-//                     <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-//                   )}
-//                   {filteredItem.status === 20 && (
-//                     <Button variant="contained">กำลังกรอกข้อมูล</Button>
-//                   )}
-//                   {filteredItem.status === 30 && (
-//                     <Button variant="contained" color="success">
-//                       กรอกข้อมูลสำเร็จ
-//                     </Button>
-//                   )}
-//                   <Box>
-//                     <Grid>
-                      
-//                     <CardDialog
-//                       id={filteredItem.id}
-//                       name={filteredItem.name}
-//                       email={filteredItem.email}
-//                       priority={filteredItem.priority}
-//                       type={filteredItem.type}
-//                       image={filteredItem.image}
-//                       status={filteredItem.status}
-//                       creactedat={filteredItem.creactedat}
-//                       updatedat={filteredItem.updatedat}
-//                     />
-//                     <FormEdidDialog
-//                       id={filteredItem.id}
-//                       name={filteredItem.name}
-//                       email={filteredItem.email}
-//                       image={filteredItem.image}
-//                       status={filteredItem.status}
-//                       priority={filteredItem.priority}
-//                       type={filteredItem.type}
-//                       active={filteredItem.active}
-//                       deletestatus={filteredItem.deletestatus}
-//                     />
-//                     <DeleteDialog
-//                       id={filteredItem.id}
-//                       name={filteredItem.name}
-//                       checked={checked}
-//                     />
-//                     </Grid>
-//                   </Box>
-//                 </Grid>
-//               </Grid>
-//             ))
-//         )}
-//       </CustomTabPanel>
-//       <CustomTabPanel value={value} index={1}>
-//         {data
-//           .filter((item) => item.status === 10 && item.deletestatus === false)
-//           .map((filteredItem) => (
-//             <Grid
-//               container
-//               spacing={2}
-//               key={filteredItem.id}
-//               textAlign="left"
-//               margin={1}
-//             >
-//               <Grid item xs={1}>
-//                 ID: {filteredItem.id}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Name: {filteredItem.name}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Email: {filteredItem.email}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Createdat: {filteredItem.creactedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Updatedat: {filteredItem.updatedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Type: {filteredItem.type}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Priority:{" "}
-//                 {filteredItem.priority === 1 && (
-//                   <PriorityHighIcon color="disabled" />
-//                 )}
-//                 {filteredItem.priority === 2 && (
-//                   <PriorityHighIcon color="primary" />
-//                 )}
-//                 {filteredItem.priority === 3 && (
-//                   <PriorityHighIcon color="error" />
-//                 )}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Status:{" "}
-//                 {filteredItem.status === 10 && (
-//                   <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 20 && (
-//                   <Button variant="contained">กำลังกรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 30 && (
-//                   <Button variant="contained" color="success">
-//                     กรอกข้อมูลสำเร็จ
-//                   </Button>
-//                 )}
-//               </Grid>
-//             </Grid>
-//           ))}
-//       </CustomTabPanel>
-//       <CustomTabPanel value={value} index={2}>
-//         {data
-//           .filter((item) => item.status === 20 && item.deletestatus === false)
-//           .map((filteredItem) => (
-//             <Grid
-//               container
-//               spacing={2}
-//               key={filteredItem.id}
-//               textAlign="left"
-//               margin={1}
-//             >
-//               <Grid item xs={1}>
-//                 ID: {filteredItem.id}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Name: {filteredItem.name}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Email: {filteredItem.email}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Createdat: {filteredItem.creactedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Updatedat: {filteredItem.updatedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Type: {filteredItem.type}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Priority:{" "}
-//                 {filteredItem.priority === 1 && (
-//                   <PriorityHighIcon color="disabled" />
-//                 )}
-//                 {filteredItem.priority === 2 && (
-//                   <PriorityHighIcon color="primary" />
-//                 )}
-//                 {filteredItem.priority === 3 && (
-//                   <PriorityHighIcon color="error" />
-//                 )}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Status:{" "}
-//                 {filteredItem.status === 10 && (
-//                   <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 20 && (
-//                   <Button variant="contained">กำลังกรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 30 && (
-//                   <Button variant="contained" color="success">
-//                     กรอกข้อมูลสำเร็จ
-//                   </Button>
-//                 )}
-//               </Grid>
-//             </Grid>
-//           ))}
-//       </CustomTabPanel>
-//       <CustomTabPanel value={value} index={3}>
-//         {data
-//           .filter((item) => item.status === 30 && item.deletestatus === false)
-//           .map((filteredItem) => (
-//             <Grid
-//               container
-//               spacing={2}
-//               key={filteredItem.id}
-//               textAlign="left"
-//               margin={1}
-//             >
-//               <Grid item xs={1}>
-//                 ID: {filteredItem.id}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Name: {filteredItem.name}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Email: {filteredItem.email}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Createdat: {filteredItem.creactedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Updatedat: {filteredItem.updatedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Type: {filteredItem.type}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Priority:{" "}
-//                 {filteredItem.priority === 1 && (
-//                   <PriorityHighIcon color="disabled" />
-//                 )}
-//                 {filteredItem.priority === 2 && (
-//                   <PriorityHighIcon color="primary" />
-//                 )}
-//                 {filteredItem.priority === 3 && (
-//                   <PriorityHighIcon color="error" />
-//                 )}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Status:{" "}
-//                 {filteredItem.status === 10 && (
-//                   <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 20 && (
-//                   <Button variant="contained">กำลังกรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 30 && (
-//                   <Button variant="contained" color="success">
-//                     กรอกข้อมูลสำเร็จ
-//                   </Button>
-//                 )}
-//               </Grid>
-//             </Grid>
-//           ))}
-//       </CustomTabPanel>
-//       <CustomTabPanel value={value} index={4}>
-//         <Switch
-//           checked={checked}
-//           onChange={switchChange}
-//           inputProps={{ "aria-label": "controlled" }}
-//         />
-//         {checked ? (
-//           <Button
-//             variant="contained"
-//             color="success"
-//             onClick={handleDeleteSorf}
-//           >
-//             UnDelete
-//           </Button>
-//         ) : (
-//           <Button variant="contained" color="error" onClick={handleDeleteSorf}>
-//             Delete
-//           </Button>
-//         )}{" "}
-//         <Snackbars opensn={open} />
-//         {data
-//           .filter((item) => item.deletestatus === true)
-//           .map((filteredItem) => (
-//             <Grid
-//               container
-//               spacing={2}
-//               key={filteredItem.id}
-//               textAlign="left"
-//               margin={1}
-//             >
-//               <Checkbox
-//                 checked={selectedDelelte.includes(filteredItem.id)}
-//                 onChange={() => handleCheckboxChangeDelete(filteredItem.id)}
-//                 inputProps={{ "aria-label": "controlled" }}
-//               />
-//               <Grid item xs={1}>
-//                 ID: {filteredItem.id}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Name: {filteredItem.name}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Email: {filteredItem.email}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Createdat: {filteredItem.creactedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Updatedat: {filteredItem.updatedat?.toDateString()}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Type: {filteredItem.type}
-//               </Grid>
-//               <Grid item xs={1}>
-//                 Priority:{" "}
-//                 {filteredItem.priority === 1 && (
-//                   <PriorityHighIcon color="disabled" />
-//                 )}
-//                 {filteredItem.priority === 2 && (
-//                   <PriorityHighIcon color="primary" />
-//                 )}
-//                 {filteredItem.priority === 3 && (
-//                   <PriorityHighIcon color="error" />
-//                 )}
-//               </Grid>
-//               <Grid item xs={2}>
-//                 Status:{" "}
-//                 {filteredItem.status === 10 && (
-//                   <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 20 && (
-//                   <Button variant="contained">กำลังกรอกข้อมูล</Button>
-//                 )}
-//                 {filteredItem.status === 30 && (
-//                   <Button variant="contained" color="success">
-//                     กรอกข้อมูลสำเร็จ
-//                   </Button>
-//                 )}
-//               </Grid>
-//             </Grid>
-//           ))}
-//       </CustomTabPanel>
-//     </Box>
-//   );
-// }
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  return (<>
+        <Button variant="outlined" onClick={handleClickOpen}>
+        เพิ่มข้อมูล
+      </Button>
+      <Button onClick={generateRandomDataContext}>Add Data 100 Row</Button>
+
+      <Dialog open={open} fullWidth>
+        <DialogTitle>Formข้อมูล</DialogTitle>
+       
+          
+        <DialogContent>      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+            const labelProps: {
+                optional?: React.ReactNode;
+                error?: boolean;
+          } = {};
+          if (
+            index === 0 &&
+            formik.touched.todo &&
+            Boolean(formik.errors.todo)
+          ) {
+            labelProps.optional = (
+              <Typography variant="caption" color="error">
+                Required
+              </Typography>
+            );
+            labelProps.error = true;
+          }
+
+          return (
+            <Step key={label}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+
+    </DialogContent>      <DialogContent>
+      {activeStep === steps.length - 1 && (
+            <React.Fragment>
+              <Typography sx={{ mt: 2, mb: 1 }}>
+              </Typography>
+              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Button  onClick={handleBack} sx={{ mr: 1 }}>
+                  Back
+                </Button>
+                <Box sx={{ flex: "1 1 auto" }} />
+                <Button
+                  onClick={(e: any) => formik.handleSubmit(e)}
+                  disabled={!formik.isValid || formik.isSubmitting}
+                >
+                  Save
+                </Button>
+              </Box>
+            </React.Fragment>
+          )}
+       {activeStep === 0 && (
+            <React.Fragment>
+              <Box margin={2}>
+                Active
+                <Checkbox
+                  checked={formik.values.active}
+                  onChange={handleChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </Box>
+              <Box margin={2}>
+                <TextField
+                  fullWidth
+                  id="todo"
+                  label="Name"
+                  variant="outlined"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.todo}
+                  error={formik.touched.todo && Boolean(formik.errors.todo)}
+                  helperText={formik.touched.todo && formik.errors.todo}
+                />
+              </Box>
+
+              <Box margin={2}>
+                <TextField
+                  fullWidth
+                  id="type"
+                  label="Type"
+                  variant="outlined"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.type}
+                  error={formik.touched.type && Boolean(formik.errors.type)}
+                  helperText={formik.touched.type && formik.errors.type}
+                />
+              </Box>
+
+              <Box margin={2}>
+                Status
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={formik.values.status}
+                  fullWidth
+                  onChange={(event) =>
+                    formik.setFieldValue("status", event.target.value)
+                  }
+                >
+                  <MenuItem value={10}>ยังไม่ทำ</MenuItem>
+                  <MenuItem value={20}>กำลังทำ</MenuItem>
+                  <MenuItem value={30}>ทำเสร็จแล้ว</MenuItem>
+                </Select>
+              </Box>
+
+              <Box margin={2}>
+                Priority
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={formik.values.priority}
+                  fullWidth
+                  onChange={(event) =>
+                    formik.setFieldValue("priority", event.target.value)
+                  }
+                >
+                  <MenuItem value={1}>Low</MenuItem>
+                  <MenuItem value={2}>Medium</MenuItem>
+                  <MenuItem value={3}>High</MenuItem>
+                </Select>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Box sx={{ flex: "1 1 auto" }} />
+
+                <Button onClick={handleNext}>
+                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                </Button>
+              </Box>
+            </React.Fragment>
+          )}
+      {activeStep === 1 && (
+            <React.Fragment>
+              <Box margin={2}>
+                <TextField
+                  variant="outlined"
+                  type="text"
+                  label={
+                    formik.values.image?.name
+                      ? formik.values.image?.name
+                      : "Uploadfile"
+                  }
+                  fullWidth
+                  disabled
+                  value={formik.values.image?.name}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton component="label">
+                        <FileUploadOutlined />
+                        <input
+                          type="file"
+                          hidden
+                          name="[licenseFile]"
+                          onChange={handleFileChange}
+                        />
+                      </IconButton>
+                    ),
+                  }}
+                  error={formik.touched.image && Boolean(formik.errors.image)}
+                  helperText={formik.touched.image && formik.errors.image}
+                />
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Button  onClick={handleBack} sx={{ mr: 1 }}>
+                  Back
+                </Button>
+                <Box sx={{ flex: "1 1 auto" }} />
+
+                <Button onClick={handleNext}>
+                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                </Button>
+              </Box>
+            </React.Fragment>
+          )}
+    </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}

@@ -17,10 +17,13 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import AutoDeleteIcon from "@mui/icons-material/AutoDelete";
 import { FC, ReactNode } from "react";
 import MenuComponent from "@/components/menuComponent";
 import Link from "next/link";
+import SaveIcon from "@mui/icons-material/Save";
+import HomeIcon from '@mui/icons-material/Home';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 interface MyProviderProps {
   children: ReactNode;
 }
@@ -29,7 +32,7 @@ const listData = [
   { text: "Home", link: "/" },
   { text: "AddData", link: "/adddata" },
   { text: "Delete", link: "/tabledelete" },
-  { text: "NotFound", link: "drafts-link" },
+  {text: "Aboutme" , link: "/aboutme" },
 ];
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -177,7 +180,14 @@ const Layout: FC<MyProviderProps> = ({ children }) => {
                       justifyContent: "center",
                     }}
                   >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    {index === 0 ? (
+                      <HomeIcon />
+                    ) : index === 1 ? (
+                      <SaveIcon />
+                    ) : index ===2 ?(
+                      <AutoDeleteIcon />
+                      
+                    ):<AssignmentIndIcon/>}
                   </ListItemIcon>
                   <ListItemText
                     primary={text.text}
@@ -189,30 +199,6 @@ const Layout: FC<MyProviderProps> = ({ children }) => {
           ))}
         </List>
         <Divider />
-        {/* <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
