@@ -8,26 +8,46 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useMyContext } from "@/Context/dataContext";
 import { useFormik } from "formik";
-import { Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  styled,
+} from "@mui/material";
 import { FileUploadOutlined } from "@mui/icons-material";
 
-const steps = [
-  "Input",
-  "UpLoad",
-  "Save",
-];
+const steps = ["Input", "UpLoad", "Save"];
 interface PropsData {
-    active: boolean;
-    id: number;
-    todo: string;
-    creactedat: Date;
-    updatedat?: Date;
-    priority: number;
-    type: string;
-    image: File | null;
-    status: number;
-    deletestatus: boolean;
+  active: boolean;
+  id: number;
+  todo: string;
+  creactedat: Date;
+  updatedat?: Date;
+  priority: number;
+  type: string;
+  image: File | null;
+  status: number;
+  deletestatus: boolean;
+}
+
+const MyTextField = styled(TextField)`
+  width: 100%;
+  margin: 3px;
+  input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 4px 0;
+    border-radius: 40px;
   }
+`;
+
 export default function StepperComponent() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -81,7 +101,7 @@ export default function StepperComponent() {
       };
 
       addData(newData);
-      handleReset()
+      handleReset();
       handleClose();
       resetForm();
     },
@@ -135,50 +155,50 @@ export default function StepperComponent() {
     setActiveStep(0);
   };
 
-  return (<>
-        <Button variant="outlined" onClick={handleClickOpen}>
+  return (
+    <>
+      <Button variant="outlined" onClick={handleClickOpen}>
         เพิ่มข้อมูล
       </Button>
       <Button onClick={generateRandomDataContext}>Add Data 100 Row</Button>
 
       <Dialog open={open} fullWidth>
         <DialogTitle>Formข้อมูล</DialogTitle>
-       
-          
-        <DialogContent>      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-            const labelProps: {
+        <DialogContent>
+          {" "}
+          <Stepper activeStep={activeStep}>
+            {steps.map((label, index) => {
+              const labelProps: {
                 optional?: React.ReactNode;
                 error?: boolean;
-          } = {};
-          if (
-            index === 0 &&
-            formik.touched.todo &&
-            Boolean(formik.errors.todo)
-          ) {
-            labelProps.optional = (
-              <Typography variant="caption" color="error">
-                Required
-              </Typography>
-            );
-            labelProps.error = true;
-          }
+              } = {};
+              if (
+                index === 0 &&
+                formik.touched.todo &&
+                Boolean(formik.errors.todo)
+              ) {
+                labelProps.optional = (
+                  <Typography variant="caption" color="error">
+                    Required
+                  </Typography>
+                );
+                labelProps.error = true;
+              }
 
-          return (
-            <Step key={label}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-
-    </DialogContent>      <DialogContent>
-      {activeStep === steps.length - 1 && (
+              return (
+                <Step key={label}>
+                  <StepLabel {...labelProps}>{label}</StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+        </DialogContent>{" "}
+        <DialogContent>
+          {activeStep === steps.length - 1 && (
             <React.Fragment>
-              <Typography sx={{ mt: 2, mb: 1 }}>
-              </Typography>
+              <Typography sx={{ mt: 2, mb: 1 }}></Typography>
               <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                <Button  onClick={handleBack} sx={{ mr: 1 }}>
+                <Button onClick={handleBack} sx={{ mr: 1 }}>
                   Back
                 </Button>
                 <Box sx={{ flex: "1 1 auto" }} />
@@ -191,7 +211,7 @@ export default function StepperComponent() {
               </Box>
             </React.Fragment>
           )}
-       {activeStep === 0 && (
+          {activeStep === 0 && (
             <React.Fragment>
               <Box margin={2}>
                 Active
@@ -202,10 +222,13 @@ export default function StepperComponent() {
                 />
               </Box>
               <Box margin={2}>
-                <TextField
-                  fullWidth
+                <InputLabel shrink htmlFor="bootstrap-input">
+                  TODO
+                </InputLabel>
+                <MyTextField
+                  hiddenLabel
+                  placeholder="ToDo"
                   id="todo"
-                  label="Name"
                   variant="outlined"
                   type="text"
                   onChange={formik.handleChange}
@@ -216,10 +239,13 @@ export default function StepperComponent() {
               </Box>
 
               <Box margin={2}>
-                <TextField
-                  fullWidth
+                {" "}
+                <InputLabel shrink htmlFor="bootstrap-input">
+                  TYPE
+                </InputLabel>
+                <MyTextField
+                  placeholder="Type"
                   id="type"
-                  label="Type"
                   variant="outlined"
                   type="text"
                   onChange={formik.handleChange}
@@ -230,7 +256,9 @@ export default function StepperComponent() {
               </Box>
 
               <Box margin={2}>
-                Status
+                <InputLabel shrink htmlFor="bootstrap-input">
+                  SELETE
+                </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -247,7 +275,10 @@ export default function StepperComponent() {
               </Box>
 
               <Box margin={2}>
-                Priority
+                <InputLabel shrink htmlFor="bootstrap-input">
+                  PRIORITY
+                </InputLabel>
+
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -271,17 +302,12 @@ export default function StepperComponent() {
               </Box>
             </React.Fragment>
           )}
-      {activeStep === 1 && (
+          {activeStep === 1 && (
             <React.Fragment>
               <Box margin={2}>
                 <TextField
                   variant="outlined"
                   type="text"
-                  label={
-                    formik.values.image?.name
-                      ? formik.values.image?.name
-                      : "Uploadfile"
-                  }
                   fullWidth
                   disabled
                   value={formik.values.image?.name}
@@ -303,7 +329,7 @@ export default function StepperComponent() {
                 />
               </Box>
               <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                <Button  onClick={handleBack} sx={{ mr: 1 }}>
+                <Button onClick={handleBack} sx={{ mr: 1 }}>
                   Back
                 </Button>
                 <Box sx={{ flex: "1 1 auto" }} />
@@ -314,7 +340,7 @@ export default function StepperComponent() {
               </Box>
             </React.Fragment>
           )}
-    </DialogContent>
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>

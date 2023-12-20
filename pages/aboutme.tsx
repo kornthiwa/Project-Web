@@ -12,6 +12,10 @@ const Item = styled("div")(({ theme }) => ({
   borderRadius: "4px",
   textAlign: "center",
   width: "400px",
+  transition: "background-color 0.3s ease-in-out",
+  "&:hover": {
+    backgroundColor: theme.palette.mode === "dark" ? "#444d58" : "#ced7e0",
+  },
 }));
 
 // Main component
