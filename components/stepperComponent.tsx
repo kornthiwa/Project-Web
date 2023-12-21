@@ -36,15 +36,58 @@ interface PropsData {
   status: number;
   deletestatus: boolean;
 }
+// const MyTextField = styled(TextField)({
+//   width: '100%',
+
+//   '& .MuiOutlinedInput-root': {
+//     overflow: 'hidden',
+//     borderRadius: 10,
+//     backgroundColor: '#fff',
+//     border: '1px solid transparent',
+//     magrgin: '0px',
+//     padding:'2px',
+//     borderImage: 'url(border.png) 30 round', // Use camelCase for borderImage
+//     '&:hover': {
+//       border: '1px',
+//       margin:'1px',
+//       borderColor: 'red',
+
+//     },
+//     '& .MuiTextField-root': {
+//       backgroundColor: 'red',
+//       borderColor: '#b04995',
+//     },
+//     '&.Mui-error': {
+//       borderColor: '#b04995',
+//     },'&.Mui-hover':{
+//       border: '1px',
+//       margin:'1px',
+//       borderColor: 'red',
+
+//     },
+//   },
+// });
 
 const MyTextField = styled(TextField)`
   width: 100%;
-  margin: 3px;
-  input {
-    width: 100%;
-    padding: 12px 15px;
-    margin: 4px 0;
-    border-radius: 40px;
+  background: white;
+  & label.Mui-focused {
+    color: red;
+  }
+  & .MuiInput-underline:after {
+    border-bottom-color: white;
+  }
+  & .MuiOutlinedInput-root {
+    & fieldset {
+      /* border-color: red; */
+      border-radius: 10px;
+    }
+    &:hover fieldset {
+      /* border-color: white; */
+    }
+    &.Mui-focused fieldset {
+      /* border-color: white; */
+    }
   }
 `;
 
@@ -226,7 +269,6 @@ export default function StepperComponent() {
                   TODO
                 </InputLabel>
                 <MyTextField
-                  hiddenLabel
                   placeholder="ToDo"
                   id="todo"
                   variant="outlined"

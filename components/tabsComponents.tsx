@@ -1,19 +1,14 @@
 import * as React from "react";
-import { useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useMyContext } from "@/Context/dataContext";
-import Grid from "@mui/material/Grid";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import Snackbars from "./snackbar";
+
 import TableComponents from "./tableComponent";
 import {
   Autocomplete,
-  Button,
-  Checkbox,
-  Switch,
+
   TextField,
 } from "@mui/material";
 

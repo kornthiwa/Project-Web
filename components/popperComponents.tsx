@@ -40,7 +40,7 @@ export default function PopperComponent(props: MyProviderProps) {
 
   return (
     <div>
-      <Button aria-describedby={id} type="button" onClick={handleClick}>
+      <Button aria-describedby={id} type="button" color="error" variant="outlined"onClick={handleClick}>
         Delete
       </Button>
       <Popper id={id} open={open} anchorEl={anchorEl}>
