@@ -265,6 +265,19 @@ export default function StepperComponent() {
                 />
               </Box>
               <Box margin={2}>
+                {" "}
+                <TextField
+                  variant="filled"
+                  label="My Label"
+                  sx={{
+                    ".MuiInputBase-input": {
+                      ":hover": {
+                        border: 1,
+                        borderColor: "red",
+                      },
+                    },
+                  }}
+                />
                 <InputLabel shrink htmlFor="bootstrap-input">
                   TODO
                 </InputLabel>

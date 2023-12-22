@@ -4,9 +4,22 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteDialog from "./deleteComponent";
 import FormEdidDialog from "./edidComponent";
 import CardDialog from "./cardComponents";
-import { Box, Button, Switch } from "@mui/material";
+import { Box, Button, Switch, styled } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
+
+const MyStyledDataGrid = styled(DataGrid)`
+  .MuiDataGrid-columnHeaders,
+  .MuiDataGrid-columnHeaderTitle {
+    background-color: #ffcaca;
+  }
+  .MuiDataGrid-footerContainer {
+    background-color: #ffcaca;
+  }
+  .MuiDataGrid-main {
+    background-color: #ffe8e8;
+  }
+`;
 
 const columns: GridColDef[] = [
   {
@@ -18,7 +31,6 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     renderCell: (params) => {
       const { row } = params;
-
       return (
         <>
           {row.active ? (
@@ -185,11 +197,9 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     renderCell: (params) => {
       const { row } = params;
-   
+
       return (
         <>
-        
-
           <DeleteDialog
             id={row.id}
             name={row.name}
@@ -215,7 +225,7 @@ interface DataContext {
   deletestatus: boolean;
 }
 interface PropsDataContext {
-  data?: DataContext[]; 
+  data?: DataContext[];
 }
 
 export default function TableComponents(props: PropsDataContext) {
@@ -225,8 +235,8 @@ export default function TableComponents(props: PropsDataContext) {
   return (
     <>
       <Box style={{ height: 400, width: "100%" }}>
-        <DataGrid
-          rows={props.data || filter} 
+        <MyStyledDataGrid
+          rows={props.data || filter}
           columns={columns}
           getRowId={(row) => row.id}
           initialState={{
@@ -234,7 +244,7 @@ export default function TableComponents(props: PropsDataContext) {
               paginationModel: { page: 0, pageSize: 5 },
             },
           }}
-          pageSizeOptions={[5, 10,20,50]}
+          pageSizeOptions={[5, 10, 20, 50]}
           checkboxSelection={false}
           rowSelection
         />

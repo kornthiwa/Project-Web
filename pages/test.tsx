@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { TextField } from "@mui/material";
-
 const StyledTextField1 = styled(TextField)`
   & .MuiTextField-root {
   }
@@ -16,6 +15,7 @@ const StyledTextField = styled(TextField)`
   background: white;
   & label.Mui-focused {
     color: red;
+    background-color: pink;
   }
  
   & .MuiInput-underline:after {
@@ -26,19 +26,20 @@ const StyledTextField = styled(TextField)`
       border-color: red;
     }
     &:hover fieldset {
-      // border-color: white;
+       border-color: blue;
     }
     &.Mui-focused fieldset {
-      // border-color: white;
+       border-color: green;
     }
   }
 `;
 export default function App() {
   return (
     <div>
-      <StyledTextField1 variant="standard" label="standard withStyles" />
+<TextField/>
       <StyledTextField1 variant="outlined" label="outlined withStyles" />
       <br />
+      
       <StyledTextField variant="standard" label="standard styled-comp" />
       <StyledTextField variant="outlined" label="outlined styled-comp" />
     </div>
