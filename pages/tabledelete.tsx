@@ -136,7 +136,7 @@ const columns: GridColDef[] = [
       return (
         <>
           <CardDialog
-            id={row.id}
+            _id={row.id}
             name={row.name}
             priority={row.priority}
             type={row.type}
@@ -162,9 +162,8 @@ const columns: GridColDef[] = [
       return (
         <>
           <FormEdidDialog
-            id={row.id}
+            _id={row.id}
             todo={row.todo}
-            email={row.email}
             image={row.image}
             status={row.status}
             priority={row.priority}
@@ -192,9 +191,8 @@ const columns: GridColDef[] = [
         
 
           <DeleteDialog
-            id={row.id}
+            _id={row.id}
             name={row.name}
-            mail={row.mail}
             file={row.file}
             dateat={row.dateat}
           />
@@ -206,14 +204,14 @@ const columns: GridColDef[] = [
 
 
 export default function DataTable() {
-  const { data,  filterdata } =
+  const { data } =
   useMyContext();
   const [ deleteid, setDelete] = React.useState<number[]>([]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-  rows={data.filter((item) => item.deletestatus === true)}
+  rows={data.filter((item:any) => item.deletestatus === true)}
   columns={columns}
   initialState={{
     pagination: {
