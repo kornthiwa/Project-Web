@@ -16,11 +16,14 @@ interface PropsCard {
   active?: boolean;
   _id: number;
   name: string;
-  creactedat?: Date;
-  updatedat?: Date;
+  creactedat?: number;
+  updatedat?: number;
   priority: number;
   type: string;
-  image: string
+  image?: {
+    image:string,
+    name:string
+  },
   status: number;
   deletestatus?: boolean;
 }
@@ -58,15 +61,11 @@ export default function CardDialog(props: PropsCard) {
               <Grid item xs={12} md={12} sx={{ width: "auto", height: "auto" }}>
                 <Card>
                 <CardMedia
-  component="img"
-  height="140"
-  image={props.image || undefined}
-  alt="Image"
-/>
-
-
-
-                 
+          component="img"
+          height="140"
+          image={props.image?.image || undefined}
+          alt="Image"
+        />
                 </Card>
               </Grid>
               <Grid item xs={12} md={12}>
@@ -77,16 +76,14 @@ export default function CardDialog(props: PropsCard) {
                       <Box>{props.name}</Box>
                     </Typography>
                   </Grid>
-                 
+
                   <Grid item xs={4}>
-                    <Typography variant="body2" color="text.secondary">
                       <Box>CreactedAT</Box>
-                      <Box> {props.creactedat?.toDateString()}</Box>
-                    </Typography>
+                      <Box> {props.creactedat}</Box>
                   </Grid>
                   <Grid item xs={4}>
                     <Box>UpdatedAT</Box>
-                    {/* <Box> {props.updatedat?.toDateString()}</Box> */}
+                    <Box> {props.updatedat}</Box>
                   </Grid>
                   <Grid item xs={4}>
                     <Box>Priority</Box>
@@ -119,13 +116,13 @@ export default function CardDialog(props: PropsCard) {
                   <Grid item xs={4}>
                     <Box>Status</Box>
                     <Box>
-                      {props.status === 10 && (
+                      {props.status === 1 && (
                         <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
                       )}
-                      {props.status === 20 && (
+                      {props.status === 2 && (
                         <Button variant="contained">กำลังกรอกข้อมูล</Button>
                       )}
-                      {props.status === 30 && (
+                      {props.status === 3 && (
                         <Button variant="contained" color="success">
                           กรอกข้อมูลสำเร็จ
                         </Button>

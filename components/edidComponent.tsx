@@ -26,7 +26,10 @@ interface PropsData {
   updatedat?: Date;
   priority: number;
   type: string;
-  image: File | null;
+  image?: {
+    image:string,
+    name:string
+  };
   status: number;
   deletestatus: boolean;
 }
@@ -93,7 +96,23 @@ export default function FormEdidDialog(props: PropsData) {
 
   const handleFileChange = (event: any) => {
     const file = event.target.files?.[0] || null;
-    formik.setFieldValue("image", file);
+  
+    if (file) {
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        const inputImage = {
+          image:base64String,
+          name:file.name
+        }
+        formik.setFieldValue("image", inputImage);
+        console.log(inputImage);
+      };
+  
+      // Read the file as a data URL
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -175,9 +194,9 @@ export default function FormEdidDialog(props: PropsData) {
                 formik.setFieldValue("status", event.target.value)
               }
             >
-              <MenuItem value={10}>ยังไม่ทำ</MenuItem>
-              <MenuItem value={20}>กำลังทำ</MenuItem>
-              <MenuItem value={30}>ทำเสร็จแล้ว</MenuItem>
+              <MenuItem value={1}>ยังไม่ทำ</MenuItem>
+              <MenuItem value={2}>กำลังทำ</MenuItem>
+              <MenuItem value={3}>ทำเสร็จแล้ว</MenuItem>
             </Select>
           </Box>
 

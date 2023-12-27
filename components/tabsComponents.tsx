@@ -46,7 +46,7 @@ function a11yProps(index: number) {
 }
 
 export default function TabsComponent() {
-  const { data, deleteDatahard, unsorfdelete, FilterData, filterdata } =
+  const { data} =
     useMyContext();
   const [value, setValue] = React.useState<number>(0);
   // const fulldata = data?.map((user) => user.todo);

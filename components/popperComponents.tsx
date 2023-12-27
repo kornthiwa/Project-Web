@@ -21,17 +21,17 @@ export default function PopperComponent(props: MyProviderProps) {
     setAnchorEl(null);
   };
 
-  const { deleteDatahard, unsorfdelete } = useMyContext();
+  const {  } = useMyContext();
 
 
 
   const handleUnDeleteClick = () => {
-    props.sorfdelete.forEach((id) => unsorfdelete(id));
+    props.sorfdelete.forEach((id) => (id));
     handleClose();
   };
 
   const handleDeleteClick = () => {
-    props.datahard.forEach((id) => deleteDatahard(id));
+    props.datahard.forEach((id) => (id));
     handleClose();
   };
 

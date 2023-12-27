@@ -60,9 +60,9 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: "creactedat",
-    headerName: "Createdat",
-    type: "date",
+    field: "createdat",
+    headerName: "createdat",
+    type: "datetime",
     width: 150,
     disableColumnMenu: true,
     align: "center",
@@ -151,9 +151,9 @@ const columns: GridColDef[] = [
             name={row.name}
             priority={row.priority}
             type={row.type}
-            image={row.image.url}
+            image={row.image}
             status={row.status}
-            creactedat={row.creactedat}
+            creactedat={row.createdat}
             updatedat={row.updatedat}
           />
         </>
@@ -228,8 +228,7 @@ interface PropsDataContext {
 }
 
 export default function TableComponents(props: PropsDataContext) {
-  const { filterdata,data } = useMyContext();
-  const filter = filterdata.filter((num) => num.deletestatus !== true);
+  const { data } = useMyContext();
 
   return (
     <>

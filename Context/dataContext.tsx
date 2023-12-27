@@ -19,14 +19,12 @@ interface DataContext {
 
 interface MyContextProps {
   data: any;
-  filterdata: DataContext[];
   createUser: (data: DataContext) => void;
-
-  deleteDatasorf: (idData: number) => void;
   editData: (id: number, datafrom: DataContext) => void;
-  deleteDatahard: (id: number) => void;
-  unsorfdelete: (id: number) => void;
-  FilterData: (name: string) => void;
+  // deleteDatasorf: (idData: number) => void;
+  // deleteDatahard: (id: number) => void;
+  // unsorfdelete: (id: number) => void;
+  // FilterData: (name: string) => void;
 }
 
 const MyContext = createContext<MyContextProps | undefined>(undefined);
@@ -37,23 +35,10 @@ interface MyProviderProps {
 
 export const MyProvider: FC<MyProviderProps> = ({ children }) => {
   const [data, setData] = React.useState<any>([]);
-  const [filterdata, setFilterdata] = React.useState<DataContext[]>([]);
-
-  const FilterData = (name: string) => {
-    let filteredData;
-
-    if (name) {
-      filteredData = data.filter((item) => item.todo.includes(name));
-    } else {
-      filteredData = data;
-    }
-
-    setFilterdata(filteredData);
-  };
 
   useEffect(() => {
       customAxios
-        .get("users/")
+        .get("api/todolist")
         .then((response) => {
           console.log("User created successfully:", response.data);
           setData(response.data);
@@ -71,7 +56,7 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
 
     if (data) {
       customAxios
-        .post("users/", data)
+        .post("api/todolist/", data)
         .then((response) => {
           console.log("User created successfully:", response.data);
           setData(response.data);
@@ -80,69 +65,75 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
           console.error("Error creating user:", error);
         });
     }
-  };
-
-  const deleteDatasorf = (idData: number) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item._id === idData ? { ...item, deletestatus: true } : item
-      )
-    );
-    setFilterdata((prevData) =>
-      prevData.map((item) =>
-        item._id === idData ? { ...item, deletestatus: true } : item
-      )
-    );
-    console.log("SordDelete สำเร็จ");
-  };
-
-  const unsorfdelete = (idData: number | number[]) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item._id === idData ? { ...item, deletestatus: false } : item
-      )
-    );
-    setFilterdata((prevData) =>
-      prevData.map((item) =>
-        item._id === idData ? { ...item, deletestatus: false } : item
-      )
-    );
-    console.log("UnSordDelete สำเร็จ");
-  };
-
-  const deleteDatahard = (iddata: number | number[]) => {
-    setData((prevData) => prevData.filter((item) => item._id !== iddata));
-    setFilterdata((prevData) => prevData.filter((item) => item._id !== iddata));
-    console.log("Delete ข้อมูลสำเร็จ");
   };
 
   const editData = (id: number, updatedData: DataContext) => {
     console.log(updatedData);
-    
+  
     if (data) {
       customAxios
-        .put(`users/${id}`, updatedData)
+        .patch(`api/todolist/${id}`, updatedData)
         .then((response) => {
-          console.log("User created successfully:", response.data);
-          setData(response.data);
+          console.log("Data updated successfully:", response.data);
+          setData((prevData:DataContext[]) =>
+            prevData.map((item:DataContext) =>
+              item._id === id ? { ...item, ...response.data } : item
+            )
+          );
         })
         .catch((error) => {
-          console.error("Error creating user:", error);
+          console.error("Error updating data:", error);
         });
     }
   };
+
+  // const deleteDatasorf = (idData: number) => {
+  //   setData((prevData) =>
+  //     prevData.map((item) =>
+  //       item._id === idData ? { ...item, deletestatus: true } : item
+  //     )
+  //   );
+  //   setFilterdata((prevData) =>
+  //     prevData.map((item) =>
+  //       item._id === idData ? { ...item, deletestatus: true } : item
+  //     )
+  //   );
+  //   console.log("SordDelete สำเร็จ");
+  // };
+
+  // const unsorfdelete = (idData: number | number[]) => {
+  //   setData((prevData) =>
+  //     prevData.map((item) =>
+  //       item._id === idData ? { ...item, deletestatus: false } : item
+  //     )
+  //   );
+  //   setFilterdata((prevData) =>
+  //     prevData.map((item) =>
+  //       item._id === idData ? { ...item, deletestatus: false } : item
+  //     )
+  //   );
+  //   console.log("UnSordDelete สำเร็จ");
+  // };
+
+  // const deleteDatahard = (iddata: number | number[]) => {
+  //   setData((prevData) => prevData.filter((item) => item._id !== iddata));
+  //   setFilterdata((prevData) => prevData.filter((item) => item._id !== iddata));
+  //   console.log("Delete ข้อมูลสำเร็จ");
+  // };
+
+  
 
   return (
     <MyContext.Provider
       value={{
         data,
         createUser,
-        deleteDatasorf,
         editData,
-        deleteDatahard,
-        unsorfdelete,
-        filterdata,
-        FilterData,
+        // deleteDatasorf,
+        // deleteDatahard,
+        // unsorfdelete,
+        // filterdata,
+        // FilterData,
       }}
     >
       {children}
