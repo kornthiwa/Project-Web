@@ -1,31 +1,32 @@
 // context.tsx
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { createContext, useContext, FC, ReactNode } from "react";
+import customAxios from "./axios";
 
 interface DataContext {
-  active: boolean;
-  id: number;
-  todo: string;
-  creactedat?: Date;
-  updatedat?: Date;
-  priority: number;
-  type: string;
-  image: File | null;
-  status: number;
-  deletestatus: boolean;
+  _id?: any;
+  active?: boolean;
+  todo?: string;
+  priority?: number;
+  type?: string;
+  image?: {
+    image:string,
+    name:string
+  },
+    status?: number;
+  deletestatus?: boolean;
 }
 
 interface MyContextProps {
-  data: DataContext[];
+  data: any;
   filterdata: DataContext[];
-  addData: (newData: DataContext) => void;
+  createUser: (data: DataContext) => void;
 
   deleteDatasorf: (idData: number) => void;
   editData: (id: number, datafrom: DataContext) => void;
   deleteDatahard: (id: number) => void;
   unsorfdelete: (id: number) => void;
   FilterData: (name: string) => void;
-  generateRandomDataContext: () => void;
 }
 
 const MyContext = createContext<MyContextProps | undefined>(undefined);
@@ -35,7 +36,7 @@ interface MyProviderProps {
 }
 
 export const MyProvider: FC<MyProviderProps> = ({ children }) => {
-  const [data, setData] = React.useState<DataContext[]>([]);
+  const [data, setData] = React.useState<any>([]);
   const [filterdata, setFilterdata] = React.useState<DataContext[]>([]);
 
   const FilterData = (name: string) => {
@@ -49,54 +50,47 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
 
     setFilterdata(filteredData);
   };
-  const generateRandomDataContext = (): DataContext[] => {
-    const randomData: DataContext[] = [];
 
-    for (let i = 1; i <= 100; i++) {
-      const newData: DataContext = {
-        active: Math.random() < 0.5,
-        id: data.length + i, 
-        todo: `User${data.length+i}`,
-        creactedat: new Date(),
-        updatedat: new Date(),
-        priority: Math.floor(Math.random() * 3) + 1,
-        type: Math.random() < 0.5 ? "User" : "Admin",
-        image: null,
-        status: Math.random() < 0.33 ? 10 : Math.random() < 0.66 ? 20 : 30,
-        deletestatus: Math.random() < 0.2,
-      };
-  
+  useEffect(() => {
+      customAxios
+        .get("users/")
+        .then((response) => {
+          console.log("User created successfully:", response.data);
+          setData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error creating user:", error);
+        });
+   console.log("API GET");
+    console.log(data);
+  }, []);
+ 
 
-      randomData.push(newData);
+  const createUser = (data: DataContext) => {
+    console.log(data);
+
+    if (data) {
+      customAxios
+        .post("users/", data)
+        .then((response) => {
+          console.log("User created successfully:", response.data);
+          setData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error creating user:", error);
+        });
     }
-
-    setData((prevData) => [...prevData, ...randomData]);
-    setFilterdata((prevData) => [...prevData, ...randomData]);
-    return randomData;
   };
-
-  const addData = useCallback(
-    (newData: DataContext) => {
-      if (!newData.todo) {
-        throw new Error("Todo is required");
-      }
-
-      setData((prevData) => [...prevData, newData]
-      );
-      setFilterdata((prevFilterData) => [...prevFilterData, newData]);
-    },
-    []
-  );
 
   const deleteDatasorf = (idData: number) => {
     setData((prevData) =>
       prevData.map((item) =>
-        item.id === idData ? { ...item, deletestatus: true } : item
+        item._id === idData ? { ...item, deletestatus: true } : item
       )
     );
     setFilterdata((prevData) =>
       prevData.map((item) =>
-        item.id === idData ? { ...item, deletestatus: true } : item
+        item._id === idData ? { ...item, deletestatus: true } : item
       )
     );
     console.log("SordDelete สำเร็จ");
@@ -105,49 +99,50 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
   const unsorfdelete = (idData: number | number[]) => {
     setData((prevData) =>
       prevData.map((item) =>
-        item.id === idData ? { ...item, deletestatus: false } : item
+        item._id === idData ? { ...item, deletestatus: false } : item
       )
     );
     setFilterdata((prevData) =>
       prevData.map((item) =>
-        item.id === idData ? { ...item, deletestatus: false } : item
+        item._id === idData ? { ...item, deletestatus: false } : item
       )
     );
     console.log("UnSordDelete สำเร็จ");
   };
 
-  const deleteDatahard = (iddata: number| number[]) => {
-    setData((prevData) => prevData.filter((item) => item.id !== iddata));
-    setFilterdata((prevData) => prevData.filter((item) => item.id !== iddata));
+  const deleteDatahard = (iddata: number | number[]) => {
+    setData((prevData) => prevData.filter((item) => item._id !== iddata));
+    setFilterdata((prevData) => prevData.filter((item) => item._id !== iddata));
     console.log("Delete ข้อมูลสำเร็จ");
   };
 
   const editData = (id: number, updatedData: DataContext) => {
-    setData((prevData) =>
-      prevData.map((item) =>
-        item.id === id ? { ...item, ...updatedData } : item
-      )
-    );
-    setFilterdata((prevFilterData) =>
-      prevFilterData.map((item) =>
-        item.id === id ? { ...item, ...updatedData } : item
-      )
-    );
-    console.log("Edit สำเร็จ");
+    console.log(updatedData);
+    
+    if (data) {
+      customAxios
+        .put(`users/${id}`, updatedData)
+        .then((response) => {
+          console.log("User created successfully:", response.data);
+          setData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error creating user:", error);
+        });
+    }
   };
 
   return (
     <MyContext.Provider
       value={{
         data,
-        addData,
+        createUser,
         deleteDatasorf,
         editData,
         deleteDatahard,
         unsorfdelete,
         filterdata,
         FilterData,
-        generateRandomDataContext,
       }}
     >
       {children}

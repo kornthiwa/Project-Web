@@ -27,7 +27,7 @@ interface PropsData {
 
 export default function AddtodoComponent() {
   const [open, setOpen] = React.useState(false);
-  const { data, addData, generateRandomDataContext } = useMyContext();
+  const { data, } = useMyContext();
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
@@ -67,7 +67,6 @@ export default function AddtodoComponent() {
         deletestatus: values.deletestatus,
       };
 
-      addData(newData);
       handleClose();
       resetForm();
     },
@@ -95,7 +94,6 @@ export default function AddtodoComponent() {
       <Button variant="outlined" onClick={handleClickOpen}>
         เพิ่มข้อมูล
       </Button>
-      <Button onClick={generateRandomDataContext}>Add Data 100 Row</Button>
 
       <Dialog open={open} fullWidth>
         <DialogTitle>Formข้อมูล</DialogTitle>

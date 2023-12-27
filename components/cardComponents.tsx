@@ -14,13 +14,13 @@ import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
 interface PropsCard {
   active?: boolean;
-  id: number;
+  _id: number;
   name: string;
   creactedat?: Date;
   updatedat?: Date;
   priority: number;
   type: string;
-  image: File | null;
+  image: string
   status: number;
   deletestatus?: boolean;
 }
@@ -50,33 +50,23 @@ export default function CardDialog(props: PropsCard) {
         fullWidth
       >
         <DialogTitle id="responsive-dialog-title">
-          ข้อมูล ID {props.id}
+          ข้อมูล ID {props._id}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             <Grid container spacing={1}>
               <Grid item xs={12} md={12} sx={{ width: "auto", height: "auto" }}>
                 <Card>
-                  {props.image?<CardMedia
-                    component="img"
-                    height="140"
-                    image={props.image ? URL.createObjectURL(props.image) : ""}
-                    alt="Image"
-                  />:
-                  <Box
-                    sx={{
-                      height: 140,
-                      textAlign: 'center',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      display: 'flex',
-                      '&:hover': {
-                        backgroundColor: 'red',
-                      },
-                    }}
-                  >
-                    ไม่มีข้อมูล
-                  </Box>}
+                <CardMedia
+  component="img"
+  height="140"
+  image={props.image || undefined}
+  alt="Image"
+/>
+
+
+
+                 
                 </Card>
               </Grid>
               <Grid item xs={12} md={12}>
@@ -96,7 +86,7 @@ export default function CardDialog(props: PropsCard) {
                   </Grid>
                   <Grid item xs={4}>
                     <Box>UpdatedAT</Box>
-                    <Box> {props.updatedat?.toDateString()}</Box>
+                    {/* <Box> {props.updatedat?.toDateString()}</Box> */}
                   </Grid>
                   <Grid item xs={4}>
                     <Box>Priority</Box>

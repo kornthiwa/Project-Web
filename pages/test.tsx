@@ -1,47 +1,46 @@
-import React from "react";
-import styled from "styled-components";
-import { TextField } from "@mui/material";
-const StyledTextField1 = styled(TextField)`
-  & .MuiTextField-root {
-  }
-  & .MuiInput-underline:after {
-    border-bottom-color: white;
-  }
-`;
+import axios from 'axios';
+import React, { useState } from 'react';
 
+function Test() {
+  const [image, setImage] = useState<File | null>(null);
+  const [data, setData] = useState<any>(null);
 
+  const submitImage = async (e) => {
+    e.preventDefault();
 
-const StyledTextField = styled(TextField)`
-  background: white;
-  & label.Mui-focused {
-    color: red;
-    background-color: pink;
-  }
- 
-  & .MuiInput-underline:after {
-    border-bottom-color: white;
-  }
-  & .MuiOutlinedInput-root {
-    & fieldset {
-      border-color: red;
+    if (!image) {
+      return; // หรือแสดงข้อความแจ้งเตือนว่าผู้ใช้ยังไม่ได้เลือกไฟล์
     }
-    &:hover fieldset {
-       border-color: blue;
-    }
-    &.Mui-focused fieldset {
-       border-color: green;
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    try {
+      const result = await axios.get('http://localhost:8080/users', {
+        headers: {"Content-Type": "multipart/form-data"},
+      });
+      console.log(result.data); // จัดการข้อมูลที่ได้รับจากการ response
+      setData(result.data[0])  
+      } catch (error) {
+      console.error('Error submitting image:', error);
     }
   }
-`;
-export default function App() {
+
+  const onInputChange = (e) => {
+    console.log(e.target.files[0]);
+    setImage(e.target.files[0]);
+  }
+
   return (
     <div>
-<TextField/>
-      <StyledTextField1 variant="outlined" label="outlined withStyles" />
-      <br />
-      
-      <StyledTextField variant="standard" label="standard styled-comp" />
-      <StyledTextField variant="outlined" label="outlined styled-comp" />
-    </div>
+      <form onSubmit={submitImage}>
+        <input type="file" name="image" onChange={onInputChange} />
+        <button type="submit">Click</button>
+      </form>
+      <img src={data?.image} />
+         </div>
+
   );
 }
+
+export default Test;

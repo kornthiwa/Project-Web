@@ -17,7 +17,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 interface PropsData {
-  id: number;
+  _id: number;
   name?: string;
   mail?: string;
   file?: string | undefined;
@@ -81,7 +81,7 @@ export default function DeleteDialog(props: PropsData) {
         </Button>
         <Button
           onClick={() => {
-            handleConfirmButtonClick(props.id);
+            handleConfirmButtonClick(props._id);
           }}
           color="primary"
           autoFocus

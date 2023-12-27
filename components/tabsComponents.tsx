@@ -49,7 +49,7 @@ export default function TabsComponent() {
   const { data, deleteDatahard, unsorfdelete, FilterData, filterdata } =
     useMyContext();
   const [value, setValue] = React.useState<number>(0);
-  const fulldata = data.map((user) => user.todo);
+  // const fulldata = data?.map((user) => user.todo);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -69,36 +69,36 @@ export default function TabsComponent() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Autocomplete
+        {/* <Autocomplete
           options={fulldata}
           // value={}
           onChange={(event, value) => FilterData(value as string)}
           onInputChange={(event, value) => FilterData(value as string)}
           renderInput={(params) => <TextField {...params} label="Select" />}
-        />
+        /> */}
 
         <TableComponents />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <TableComponents
-          data={filterdata.filter(
-            (item) => item.status === 10 && item.deletestatus === false
-          )}
+          // data={filterdata.filter(
+          //   (item) => item.status === 10 && item.deletestatus === false
+          // )}
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
       <TableComponents
-          data={filterdata.filter(
-            (item) => item.status === 20 && item.deletestatus === false
-          )}
+          // data={filterdata.filter(
+          //   (item) => item.status === 20 && item.deletestatus === false
+          // )}
         />
 
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
       <TableComponents
-          data={filterdata.filter(
-            (item) => item.status === 30 && item.deletestatus === false
-          )}
+          // data={filterdata.filter(
+          //   (item) => item.status === 30 && item.deletestatus === false
+          // )}
         />
       </CustomTabPanel>
      

@@ -43,7 +43,7 @@ const columns: GridColDef[] = [
     },
   },
   {
-    field: "id",
+    field: "_id",
     headerName: "ID",
     width: 50,
     disableColumnMenu: true,
@@ -147,11 +147,11 @@ const columns: GridColDef[] = [
       return (
         <>
           <CardDialog
-            id={row.id}
+            _id={row._id}
             name={row.name}
             priority={row.priority}
             type={row.type}
-            image={row.image}
+            image={row.image.url}
             status={row.status}
             creactedat={row.creactedat}
             updatedat={row.updatedat}
@@ -173,9 +173,8 @@ const columns: GridColDef[] = [
       return (
         <>
           <FormEdidDialog
-            id={row.id}
+            _id={row._id}
             todo={row.todo}
-            email={row.email}
             image={row.image}
             status={row.status}
             priority={row.priority}
@@ -201,7 +200,7 @@ const columns: GridColDef[] = [
       return (
         <>
           <DeleteDialog
-            id={row.id}
+            _id={row._id}
             name={row.name}
             mail={row.mail}
             file={row.file}
@@ -214,7 +213,7 @@ const columns: GridColDef[] = [
 ];
 interface DataContext {
   active: boolean;
-  id: number;
+  _id: any;
   todo: string;
   creactedat?: Date;
   updatedat?: Date;
@@ -229,16 +228,16 @@ interface PropsDataContext {
 }
 
 export default function TableComponents(props: PropsDataContext) {
-  const { filterdata } = useMyContext();
+  const { filterdata,data } = useMyContext();
   const filter = filterdata.filter((num) => num.deletestatus !== true);
 
   return (
     <>
       <Box style={{ height: 400, width: "100%" }}>
         <MyStyledDataGrid
-          rows={props.data || filter}
+          rows={data}
           columns={columns}
-          getRowId={(row) => row.id}
+          getRowId={(row) => row._id}
           initialState={{
             pagination: {
               paginationModel: { page: 0, pageSize: 5 },

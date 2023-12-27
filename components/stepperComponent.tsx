@@ -24,49 +24,18 @@ import {
 import { FileUploadOutlined } from "@mui/icons-material";
 
 const steps = ["Input", "UpLoad", "Save"];
+
 interface PropsData {
   active: boolean;
-  id: number;
   todo: string;
-  creactedat: Date;
-  updatedat?: Date;
   priority: number;
   type: string;
-  image: File | null;
   status: number;
-  deletestatus: boolean;
+  image?: {
+    image:string,
+    name:string
+  }
 }
-// const MyTextField = styled(TextField)({
-//   width: '100%',
-
-//   '& .MuiOutlinedInput-root': {
-//     overflow: 'hidden',
-//     borderRadius: 10,
-//     backgroundColor: '#fff',
-//     border: '1px solid transparent',
-//     magrgin: '0px',
-//     padding:'2px',
-//     borderImage: 'url(border.png) 30 round', // Use camelCase for borderImage
-//     '&:hover': {
-//       border: '1px',
-//       margin:'1px',
-//       borderColor: 'red',
-
-//     },
-//     '& .MuiTextField-root': {
-//       backgroundColor: 'red',
-//       borderColor: '#b04995',
-//     },
-//     '&.Mui-error': {
-//       borderColor: '#b04995',
-//     },'&.Mui-hover':{
-//       border: '1px',
-//       margin:'1px',
-//       borderColor: 'red',
-
-//     },
-//   },
-// });
 
 const MyTextField = styled(TextField)`
   width: 100%;
@@ -103,7 +72,7 @@ export default function StepperComponent() {
     return skipped.has(step);
   };
   const [open, setOpen] = React.useState(false);
-  const { data, addData, generateRandomDataContext } = useMyContext();
+  const { data, createUser,  } = useMyContext();
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
@@ -120,30 +89,25 @@ export default function StepperComponent() {
   const formik = useFormik({
     initialValues: {
       active: false,
-      id: 0,
       todo: "",
-      creactedat: new Date(),
       priority: 1,
       type: "",
-      image: null,
       status: 10,
-      deletestatus: false,
+      image: undefined,
+      
     },
     validationSchema: validationSchema,
     onSubmit: (values: PropsData, { resetForm }) => {
       const newData: PropsData = {
         active: values.active,
-        id: data.length + 1,
         todo: values.todo,
-        creactedat: new Date(),
         priority: values.priority,
         type: values.type,
-        image: values.image,
         status: values.status,
-        deletestatus: values.deletestatus,
+        image:values.image
       };
 
-      addData(newData);
+      createUser(newData);
       handleReset();
       handleClose();
       resetForm();
@@ -164,8 +128,25 @@ export default function StepperComponent() {
 
   const handleFileChange = (event: any) => {
     const file = event.target.files?.[0] || null;
-    formik.setFieldValue("image", file);
+  
+    if (file) {
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        const inputImage = {
+          image:base64String,
+          name:file.name
+        }
+        formik.setFieldValue("image", inputImage);
+        console.log(inputImage);
+      };
+  
+      // Read the file as a data URL
+      reader.readAsDataURL(file);
+    }
   };
+  
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -203,7 +184,6 @@ export default function StepperComponent() {
       <Button variant="outlined" onClick={handleClickOpen}>
         เพิ่มข้อมูล
       </Button>
-      <Button onClick={generateRandomDataContext}>Add Data 100 Row</Button>
 
       <Dialog open={open} fullWidth>
         <DialogTitle>Formข้อมูล</DialogTitle>
@@ -365,7 +345,7 @@ export default function StepperComponent() {
                   type="text"
                   fullWidth
                   disabled
-                  value={formik.values.image?.name}
+                  // value={e.values.image?.name}
                   InputProps={{
                     endAdornment: (
                       <IconButton component="label">

@@ -20,9 +20,8 @@ import {
 import { FileUploadOutlined } from "@mui/icons-material";
 interface PropsData {
   active: boolean;
-  id: number;
+  _id: number;
   todo: string;
-  email: string;
   creactedat?: Date;
   updatedat?: Date;
   priority: number;
@@ -34,7 +33,7 @@ interface PropsData {
 
 export default function FormEdidDialog(props: PropsData) {
   const [open, setOpen] = React.useState(false);
-  const { data, addData, editData } = useMyContext();
+  const { data, editData } = useMyContext();
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
@@ -51,9 +50,8 @@ export default function FormEdidDialog(props: PropsData) {
   const formik = useFormik({
     initialValues: {
       active: props.active,
-      id: props.id,
+      _id: props._id,
       todo: props.todo,
-      email: props.email,
       status: props.status,
       image: props.image,
       updatedat: new Date(),
@@ -66,18 +64,16 @@ export default function FormEdidDialog(props: PropsData) {
 
       const editedData: PropsData = {
         active: values.active,
-        id: props.id,
+        _id: props._id,
         todo: values.todo,
-        email: values.email,
         status: values.status,
         image: values.image,
-        updatedat: new Date(),
         priority: values.priority,
         type: values.type,
         deletestatus: values.deletestatus,
       };
 
-      editData(props.id, editedData);
+      editData(props._id, editedData);
       handleClose();
       resetForm();
 
@@ -215,7 +211,5 @@ export default function FormEdidDialog(props: PropsData) {
     </>
   );
 }
-function resetForm() {
-  throw new Error("Function not implemented.");
-}
+
 
