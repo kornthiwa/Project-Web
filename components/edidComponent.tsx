@@ -18,23 +18,24 @@ import {
   Select,
 } from "@mui/material";
 import { FileUploadOutlined } from "@mui/icons-material";
-interface PropsData {
-  active: boolean;
-  _id: number;
-  todo: string;
-  creactedat?: Date;
-  updatedat?: Date;
-  priority: number;
-  type: string;
+interface DataContext {
+  _id?: any;
+  active?: boolean;
+  todo?: string;
+  priority?: number;
+  type?: string;
   image?: {
     image:string,
     name:string
-  };
-  status: number;
-  deletestatus: boolean;
+  },
+    status?: number;
+  deletestatus?: boolean;
+
+  onClose ?: ()=>void;
+
 }
 
-export default function FormEdidDialog(props: PropsData) {
+export default function FormEdidDialog(props: DataContext) {
   const [open, setOpen] = React.useState(false);
   const { data, editData } = useMyContext();
 
@@ -57,15 +58,13 @@ export default function FormEdidDialog(props: PropsData) {
       todo: props.todo,
       status: props.status,
       image: props.image,
-      updatedat: new Date(),
       priority: props.priority,
       type: props.type,
       deletestatus: props.deletestatus,
     },
     validationSchema: validationSchema,
-    onSubmit: (values: PropsData, { resetForm }) => {
-
-      const editedData: PropsData = {
+    onSubmit: (values: DataContext, { resetForm }) => {
+      const editedData: DataContext = {
         active: values.active,
         _id: props._id,
         todo: values.todo,
@@ -79,7 +78,6 @@ export default function FormEdidDialog(props: PropsData) {
       editData(props._id, editedData);
       handleClose();
       resetForm();
-
     },
   });
 
@@ -88,6 +86,9 @@ export default function FormEdidDialog(props: PropsData) {
   };
 
   const handleClose = () => {
+    if (props.onClose) {
+      props.onClose();
+    }
     setOpen(false);
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,20 +97,20 @@ export default function FormEdidDialog(props: PropsData) {
 
   const handleFileChange = (event: any) => {
     const file = event.target.files?.[0] || null;
-  
+
     if (file) {
       const reader = new FileReader();
-      
+
       reader.onloadend = () => {
         const base64String = reader.result as string;
         const inputImage = {
-          image:base64String,
-          name:file.name
-        }
+          image: base64String,
+          name: file.name,
+        };
         formik.setFieldValue("image", inputImage);
         console.log(inputImage);
       };
-  
+
       // Read the file as a data URL
       reader.readAsDataURL(file);
     }
@@ -117,9 +118,8 @@ export default function FormEdidDialog(props: PropsData) {
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Edid
-      </Button>
+      <MenuItem onClick={handleClickOpen}>Edid</MenuItem>
+
       <Dialog open={open} fullWidth>
         <DialogTitle>Formแก้ไขข้อมูล</DialogTitle>
         <DialogContent>
@@ -167,7 +167,7 @@ export default function FormEdidDialog(props: PropsData) {
               type="text"
               label="Uploadfile"
               fullWidth
-              value={formik.values.image?.name || props.image?.name || ""}
+              value={formik.values.image?.name || props.image?.name }
               InputProps={{
                 endAdornment: (
                   <IconButton component="label">
@@ -230,5 +230,3 @@ export default function FormEdidDialog(props: PropsData) {
     </>
   );
 }
-
-

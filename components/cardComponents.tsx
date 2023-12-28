@@ -1,8 +1,12 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { Box, Button, CardActionArea, CardActions, Grid } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  MenuItem,
+} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,22 +16,23 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
-interface PropsCard {
+interface DataContext {
+  _id?: any;
   active?: boolean;
-  _id: number;
-  name: string;
-  creactedat?: number;
-  updatedat?: number;
-  priority: number;
-  type: string;
+  todo?: string;
+  priority?: number;
+  type?: string;
+  createdAt: Date;
+    updatedAt: Date;
   image?: {
     image:string,
     name:string
   },
-  status: number;
+    status?: number;
   deletestatus?: boolean;
+  onClose? : ()=>void;
 }
-export default function CardDialog(props: PropsCard) {
+export default function CardDialog(props: DataContext) {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -38,13 +43,15 @@ export default function CardDialog(props: PropsCard) {
 
   const handleClose = () => {
     setOpen(false);
+    if (props.onClose) {
+      props.onClose();
+    }
   };
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        View
-      </Button>
+      <MenuItem onClick={handleClickOpen}>View</MenuItem>
+
       <Dialog
         fullScreen={fullScreen}
         open={open}
@@ -56,34 +63,31 @@ export default function CardDialog(props: PropsCard) {
           ข้อมูล ID {props._id}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
             <Grid container spacing={1}>
               <Grid item xs={12} md={12} sx={{ width: "auto", height: "auto" }}>
-                <Card>
-                <CardMedia
-          component="img"
-          height="140"
-          image={props.image?.image || undefined}
-          alt="Image"
-        />
+              <Card>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={props.image?.image || undefined}
+                    alt="Image"
+                  />
                 </Card>
               </Grid>
               <Grid item xs={12} md={12}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <Typography gutterBottom variant="body2" component="div">
                       <Box>ToDo</Box>
-                      <Box>{props.name}</Box>
-                    </Typography>
+                      <Box>{props.todo}</Box>
                   </Grid>
 
                   <Grid item xs={4}>
-                      <Box>CreactedAT</Box>
-                      <Box> {props.creactedat}</Box>
+                    <Box>CreactedAT</Box>
+                    <Box> {props.createdAt?.toString()}</Box>
                   </Grid>
                   <Grid item xs={4}>
                     <Box>UpdatedAT</Box>
-                    <Box> {props.updatedat}</Box>
+                    <Box> {props.updatedAt?.toString()}</Box>
                   </Grid>
                   <Grid item xs={4}>
                     <Box>Priority</Box>
@@ -108,10 +112,10 @@ export default function CardDialog(props: PropsCard) {
                     </Box>
                   </Grid>
                   <Grid item xs={4}>
-                    <Typography variant="body2" color="text.secondary">
+        
                       <Box>Type</Box>
                       <Box> {props.type}</Box>
-                    </Typography>
+                
                   </Grid>
                   <Grid item xs={4}>
                     <Box>Status</Box>
@@ -132,7 +136,6 @@ export default function CardDialog(props: PropsCard) {
                 </Grid>
               </Grid>
             </Grid>
-          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} autoFocus>

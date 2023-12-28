@@ -137,13 +137,13 @@ const columns: GridColDef[] = [
         <>
           <CardDialog
             _id={row.id}
-            name={row.name}
+            todo={row.todo}
             priority={row.priority}
             type={row.type}
             image={row.image}
             status={row.status}
-            creactedat={row.creactedat}
-            updatedat={row.updatedat}
+            createdAt={row.creactedat}
+            updatedAt={row.updatedat}
           />
         </>
       );
@@ -194,8 +194,9 @@ const columns: GridColDef[] = [
             _id={row.id}
             name={row.name}
             file={row.file}
-            dateat={row.dateat}
-          />
+            dateat={row.dateat} onClose={function (): void {
+              throw new Error("Function not implemented.");
+            } }          />
         </>
       );
     },

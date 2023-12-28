@@ -1,12 +1,10 @@
 import * as React from "react";
 import { useMyContext } from "@/Context/dataContext";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import DeleteDialog from "./deleteComponent";
-import FormEdidDialog from "./edidComponent";
-import CardDialog from "./cardComponents";
 import { Box, Button, Switch, styled } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
+import MenuListComponent from "./menulistComponents";
 
 const MyStyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-columnHeaders,
@@ -60,7 +58,7 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: "createdat",
+    field: "createdAt",
     headerName: "createdat",
     type: "datetime",
     width: 150,
@@ -69,7 +67,7 @@ const columns: GridColDef[] = [
     headerAlign: "center",
   },
   {
-    field: "updatedat",
+    field: "updatedAt",
     headerName: "Updatedat",
     type: "datetime",
     width: 150,
@@ -114,6 +112,7 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     renderCell: (params) => {
       const { row } = params;
+console.log(row.status);
 
       return (
         <>
@@ -134,61 +133,8 @@ const columns: GridColDef[] = [
   },
 
   {
-    field: "view",
-    headerName: "View",
-    width: 80,
-    align: "center",
-    sortable: false,
-    disableColumnMenu: true,
-    headerAlign: "center",
-    renderCell: (params) => {
-      const { row } = params;
-
-      return (
-        <>
-          <CardDialog
-            _id={row._id}
-            name={row.name}
-            priority={row.priority}
-            type={row.type}
-            image={row.image}
-            status={row.status}
-            creactedat={row.createdat}
-            updatedat={row.updatedat}
-          />
-        </>
-      );
-    },
-  },
-  {
-    field: "edid",
-    headerName: "Edid",
-    width: 80,
-    align: "center",
-    sortable: false,
-    disableColumnMenu: true,
-    headerAlign: "center",
-    renderCell: (params) => {
-      const { row } = params;
-      return (
-        <>
-          <FormEdidDialog
-            _id={row._id}
-            todo={row.todo}
-            image={row.image}
-            status={row.status}
-            priority={row.priority}
-            type={row.type}
-            active={row.active}
-            deletestatus={row.deletestatus}
-          />
-        </>
-      );
-    },
-  },
-  {
-    field: "delete",
-    headerName: "Delete",
+    field: " ",
+    headerName: " ",
     width: 250,
     align: "center",
     sortable: false,
@@ -199,12 +145,17 @@ const columns: GridColDef[] = [
 
       return (
         <>
-          <DeleteDialog
+          <MenuListComponent
+            createdAt={row.createdAt}
+            updatedAt={row.updatedAt}
             _id={row._id}
-            name={row.name}
-            mail={row.mail}
-            file={row.file}
-            dateat={row.dateat}
+            active={row.active}
+            todo={row.todo}
+            priority={row.priority}
+            type={row.type}
+            image={row.image}
+            status={row.status}
+            deletestatus={row.deletestatus}
           />
         </>
       );

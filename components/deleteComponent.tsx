@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useMyContext } from "@/Context/dataContext";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { Switch } from "@mui/material";
+import { MenuItem, Switch } from "@mui/material";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -22,6 +22,8 @@ interface PropsData {
   mail?: string;
   file?: string | undefined;
   dateat?: string;
+  onClose : ()=>void;
+
 }
 export default function DeleteDialog(props: PropsData) {
   const [open, setOpen] = React.useState(false);
@@ -33,9 +35,9 @@ export default function DeleteDialog(props: PropsData) {
 
   function handleConfirmButtonClick(id: number) {
     if (checked) {
-      (id);
+      id;
     } else {
-      (id);
+      id;
     }
   }
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,53 +45,45 @@ export default function DeleteDialog(props: PropsData) {
   };
   const handleClose = () => {
     setOpen(false);
+    if (props.onClose) {
+      props.onClose();
+    }
   };
 
   return (
     <>
-      <Switch
-            checked={checked}
-            onChange={handleChange}
-            inputProps={{ "aria-label": "controlled" }}
-          />
-    <Button
-      variant="outlined"
-      startIcon={<DeleteIcon />}
-      onClick={handleClickOpen}
-      color="error"
-    >
-     {checked? "Hard Delete" : "Delete"} 
-    </Button>
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {checked ? "Hard Delete" : "Delete"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Are you sure you want to {checked ? "hard delete" : "delete"} this item?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
-        <Button
-          onClick={() => {
-            handleConfirmButtonClick(props._id);
-          }}
-          color="primary"
-          autoFocus
-        >
-          Confirm
-        </Button>
-      </DialogActions>
-    </Dialog>
+      <MenuItem onClick={handleClickOpen}>Delete</MenuItem>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {checked ? "Hard Delete" : "Delete"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to {checked ? "hard delete" : "delete"} this
+            item?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleConfirmButtonClick(props._id);
+            }}
+            color="primary"
+            autoFocus
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
-  
   );
 }
