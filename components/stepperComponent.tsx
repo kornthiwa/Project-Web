@@ -22,6 +22,7 @@ import {
   styled,
 } from "@mui/material";
 import { FileUploadOutlined } from "@mui/icons-material";
+import { useMutation, useQueryClient } from "react-query";
 
 const steps = ["Input", "UpLoad", "Save"];
 
@@ -32,9 +33,9 @@ interface PropsData {
   type: string;
   status: number;
   image?: {
-    image:string,
-    name:string
-  }
+    image: string;
+    name: string;
+  };
 }
 
 const MyTextField = styled(TextField)`
@@ -61,9 +62,18 @@ const MyTextField = styled(TextField)`
 `;
 
 export default function StepperComponent() {
+  const queryClient = useQueryClient();
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
+  const { createUser } = useMyContext();
 
+  const { mutate: createTodo } = useMutation({
+    mutationFn: (todo: PropsData) => createUser(todo),
+    onSuccess: () => {
+      console.log("Create Success ID");
+      queryClient.invalidateQueries(["todos"]);
+    },
+  });
   const isStepOptional = (step: number) => {
     return step === 1;
   };
@@ -72,7 +82,6 @@ export default function StepperComponent() {
     return skipped.has(step);
   };
   const [open, setOpen] = React.useState(false);
-  const {  createUser,  } = useMyContext();
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
@@ -94,22 +103,23 @@ export default function StepperComponent() {
       type: "",
       status: 10,
       image: undefined,
-      
     },
     validationSchema: validationSchema,
-    onSubmit:async (values: PropsData, { resetForm }) => {
-      const newData: PropsData = {
+    onSubmit: async (values: PropsData, { resetForm }) => {
+      const Data: PropsData = {
         active: values.active,
         todo: values.todo,
         priority: values.priority,
         type: values.type,
         status: values.status,
-        image:values.image
+        image: values.image,
       };
 
-      for (let i = 0; i < 21; i++) {
-        await createUser(newData);
-      }
+      // for (let i = 0; i < 21; i++) {
+      //   await createTodo(Data);
+      // }
+      await createTodo(Data);
+
       handleReset();
       handleClose();
       resetForm();
@@ -130,25 +140,24 @@ export default function StepperComponent() {
 
   const handleFileChange = (event: any) => {
     const file = event.target.files?.[0] || null;
-  
+
     if (file) {
       const reader = new FileReader();
-      
+
       reader.onloadend = () => {
         const base64String = reader.result as string;
         const inputImage = {
-          image:base64String,
-          name:file.name
-        }
+          image: base64String,
+          name: file.name,
+        };
         formik.setFieldValue("image", inputImage);
-        console.log(inputImage);
       };
-  
+
       // Read the file as a data URL
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -162,19 +171,6 @@ export default function StepperComponent() {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
   };
 
   const handleReset = () => {
@@ -247,7 +243,6 @@ export default function StepperComponent() {
                 />
               </Box>
               <Box margin={2}>
-            
                 <InputLabel shrink htmlFor="bootstrap-input">
                   TODO
                 </InputLabel>
@@ -335,7 +330,7 @@ export default function StepperComponent() {
                   type="text"
                   fullWidth
                   disabled
-                  // value={formik.values.image?.name}
+                  value={formik.values.image?.name || ''} 
                   InputProps={{
                     endAdornment: (
                       <IconButton component="label">

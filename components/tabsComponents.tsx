@@ -113,11 +113,19 @@ export default function TabsComponent() {
           </Box>
           <CustomTabPanel value={value} index={0}>
             <Autocomplete
-              options={["dd"]}
+              options={todoData.map((data) => ({
+                label: data.todo,
+                value: data._id,
+              }))}
+              getOptionLabel={(option: any) => option.label}
+              getOptionDisabled={(option) => option.value === undefined}
               onChange={(event, value) => console.log(value)}
               onInputChange={(event, value) => console.log(value)}
-              renderInput={(params) => <TextField {...params} label="Select" />}
+              renderInput={(params) => {
+                return <TextField {...params} label="Select" />;
+              }}
             />
+
             <TableComponents data={todoData} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>

@@ -18,26 +18,35 @@ import {
   Select,
 } from "@mui/material";
 import { FileUploadOutlined } from "@mui/icons-material";
+import { useMutation, useQueryClient } from "react-query";
 interface DataContext {
-  _id?: any;
+  _id: string;
   active?: boolean;
   todo?: string;
   priority?: number;
   type?: string;
   image?: {
-    image:string,
-    name:string
-  },
-    status?: number;
+    image: string;
+    name: string;
+  };
+  status?: number;
   deletestatus?: boolean;
 
-  onClose ?: ()=>void;
-
+  onClose?: () => void;
 }
 
 export default function FormEdidDialog(props: DataContext) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
   const { editData } = useMyContext();
+  const { mutate: editTodo } = useMutation({
+    mutationFn: (data: { id: string; todo: DataContext }) => editData(data),
+
+    onSuccess: () => {
+      console.log("Edit Success ID:");
+      queryClient.invalidateQueries(["todos"]);
+    },
+  });
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
@@ -74,8 +83,12 @@ export default function FormEdidDialog(props: DataContext) {
         type: values.type,
         deletestatus: values.deletestatus,
       };
+      const senddata = {
+        id: props._id,
+        todo: editedData,
+      };
 
-      editData(props._id, editedData);
+      editTodo(senddata);
       handleClose();
       resetForm();
     },
@@ -167,7 +180,7 @@ export default function FormEdidDialog(props: DataContext) {
               type="text"
               label="Uploadfile"
               fullWidth
-              value={formik.values.image?.name || props.image?.name }
+              value={formik.values.image?.name || props.image?.name}
               InputProps={{
                 endAdornment: (
                   <IconButton component="label">

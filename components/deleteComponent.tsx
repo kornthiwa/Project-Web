@@ -31,7 +31,6 @@ export default function DeleteDialog(props: PropsData) {
   const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
   const { deleteData } = useMyContext();
-  const [checked, setChecked] = React.useState(true);
 
   const { mutate: deleteTodo } = useMutation({
     mutationFn: (id: string) => deleteData(id),
@@ -68,11 +67,11 @@ export default function DeleteDialog(props: PropsData) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {checked ? "Hard Delete" : "Delete"}
+          "Hard Delete" : "Delete"
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to {checked ? "hard delete" : "delete"} this
+            Are you sure you want to  "hard delete" : "delete" this
             item?
           </DialogContentText>
         </DialogContent>

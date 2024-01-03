@@ -19,7 +19,7 @@ interface DataContext {
 
 interface MyContextProps {
   createUser: (variables: DataContext) => Promise<void>;
-  editData: ( id: string, datafrom: DataContext ) => Promise<void>;
+  editData: (data: { id: string, todo: DataContext }) => Promise<any>; // Corrected syntax
   deleteData: (id: string) => Promise<void>;
   getTodo: () => Promise<DataContext[]>;
 }
@@ -30,7 +30,10 @@ const queryClient = new QueryClient();
 interface MyProviderProps {
   children: ReactNode;
 }
-
+interface EditDataParams {
+  id: string;
+  todo: DataContext;
+}
 export const MyProvider: FC<MyProviderProps> = ({ children }) => {
 
   const getTodo = async (): Promise<DataContext[]> => {
@@ -55,12 +58,11 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
     }
   };
 
-  const editData = async (id: string, updatedData: DataContext) => {
-    console.log(updatedData);
+  const editData = async (data: EditDataParams): Promise<any> => {
     try {
       const response = await customAxios.patch(
-        `api/todolist/${id}`,
-        updatedData
+        `api/todolist/${data.id}`,
+        data.todo
       );
       return response.data;
     } catch (error) {
