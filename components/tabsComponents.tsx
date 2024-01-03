@@ -115,25 +115,26 @@ export default function TabsComponent() {
             <TableComponents data={data || undefined} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <TableComponents
-              data={data?.filter(
-                (item: any) => item.status === 10 && item.deletestatus === false
-              )}
-            />
+          <TableComponents
+  data={Array.isArray(data) ? data.filter(
+    (item: DataContext) => item.status === 10 && !item.deletestatus
+  ) : undefined}
+/>
+
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            <TableComponents
-              data={data?.filter(
-                (item: any) => item.status === 20 && item.deletestatus === false
-              )}
-            />
+          <TableComponents
+  data={Array.isArray(data) ? data.filter(
+    (item: DataContext) => item.status === 20 && !item.deletestatus
+  ) : undefined}
+/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
-            <TableComponents
-              data={data?.filter(
-                (item: any) => item.status === 30 && item.deletestatus === false
-              )}
-            />
+          <TableComponents
+  data={Array.isArray(data) ? data.filter(
+    (item: DataContext) => item.status === 30 && !item.deletestatus
+  ) : undefined}
+/>
           </CustomTabPanel>
         </>
       )}

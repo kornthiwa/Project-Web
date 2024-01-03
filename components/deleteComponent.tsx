@@ -9,6 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useMyContext } from "@/Context/dataContext";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { MenuItem, Switch } from "@mui/material";
+import { useMutation } from "react-query";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -29,13 +30,22 @@ export default function DeleteDialog(props: PropsData) {
   const [open, setOpen] = React.useState(false);
   const { deleteData } = useMyContext();
   const [checked, setChecked] = React.useState(true);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+
+  const mutation = useMutation<any>({
+    mutationFn: (id: number) => deleteData(id),
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries(['todos']);
+    },
+  });
+
+
+
+  
 
   function handleConfirmButtonClick(id: number) {
-    deleteData(id)
-    handleClose()
+    mutation.mutate(id)
+    // deleteData(id)
   }
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);

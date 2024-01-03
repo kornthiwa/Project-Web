@@ -51,58 +51,46 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
   };
   
   
-  const createUser = (data: DataContext) => {
+  const createUser = async(data: DataContext) => {
     console.log(data);
-
-    if (data) {
-      customAxios
-        .post("api/todolist/", data)
-        .then((response) => {
-          console.log("User created successfully:", response.data);
-          setData(response.data);
-        })
-        .catch((error) => {
-          console.error("Error creating user:", error);
-        });
+    try {
+      const response = await customAxios.post("api/todolist/", data);
+      // Return data
+      return response.data;
+    } catch (error) {
+      // Handle errors
+      console.error("Error creating todo list:", error);
+      throw error;
     }
+     
+    
   };
 
-  const editData = (id: number, updatedData: DataContext) => {
+  const editData = async(id: number, updatedData: DataContext) => {
     console.log(updatedData);
-
-    if (data) {
-      customAxios
-        .patch(`api/todolist/${id}`, updatedData)
-        .then((response) => {
-          console.log("Data updated successfully:", response.data);
-          setData((prevData: DataContext[]) =>
-            prevData.map((item: DataContext) =>
-              item._id === id ? { ...item, ...response.data } : item
-            )
-          );
-        })
-        .catch((error) => {
-          console.error("Error updating data:", error);
-        });
+    try {
+      const response = await customAxios .patch(`api/todolist/${id}`, updatedData);
+      // Return data
+      return response.data;
+    } catch (error) {
+      // Handle errors
+      console.error("Error updating todo list:", error);
+      throw error;
     }
+   
   };
 
-  const deleteData = (id: number) => {
-    if (id) {
-      customAxios
-        .delete(`api/todolist/${id}`)
-        .then((response) => {
-          console.log("Data Delete successfully:", response.data);
-          setData((prevData: DataContext[]) =>
-            prevData.map((item: DataContext) =>
-              item._id === id ? { ...item, ...response.data } : item
-            )
-          );
-        })
-        .catch((error) => {
-          console.error("Error updating data:", error);
-        });
+  const deleteData = async(id: number) => {
+    try {
+      const response = await customAxios .delete(`api/todolist/${id}`);
+      // Return data
+      return response.data;
+    } catch (error) {
+      // Handle errors
+      console.error("Error updating todo list:", error);
+      throw error;
     }
+   
   };
 
   return (
