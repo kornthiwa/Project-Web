@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect } from "react";
 import { createContext, useContext, FC, ReactNode } from "react";
 import customAxios from "./axios";
-
+import { QueryClient, QueryClientProvider } from "react-query";
 interface DataContext {
   _id?: any;
   active?: boolean;
@@ -10,10 +10,10 @@ interface DataContext {
   priority?: number;
   type?: string;
   image?: {
-    image:string,
-    name:string
-  },
-    status?: number;
+    image: string;
+    name: string;
+  };
+  status?: number;
   deletestatus?: boolean;
 }
 
@@ -21,14 +21,12 @@ interface MyContextProps {
   data: any;
   createUser: (data: DataContext) => void;
   editData: (id: number, datafrom: DataContext) => void;
-  // deleteDatasorf: (idData: number) => void;
-  // deleteDatahard: (id: number) => void;
-  // unsorfdelete: (id: number) => void;
-  // FilterData: (name: string) => void;
+  deleteData: (id: number) => void;
+  getTodo: () => void;
 }
 
 const MyContext = createContext<MyContextProps | undefined>(undefined);
-
+const queryClient = new QueryClient();
 interface MyProviderProps {
   children: ReactNode;
 }
@@ -36,21 +34,23 @@ interface MyProviderProps {
 export const MyProvider: FC<MyProviderProps> = ({ children }) => {
   const [data, setData] = React.useState<any>([]);
 
-  useEffect(() => {
-      customAxios
-        .get("api/todolist")
-        .then((response) => {
-          console.log("User created successfully:", response.data);
-          setData(response.data);
-        })
-        .catch((error) => {
-          console.error("Error creating user:", error);
-        });
-   console.log("API GET");
-    console.log(data);
-  }, []);
- 
 
+  const getTodo = async ():Promise<DataContext[]> => {
+    // Add delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Fetch data from API
+    try {
+      const response = await customAxios.get("api/todolist");
+      // Return data
+      return response.data;
+    } catch (error) {
+      // Handle errors
+      console.error("Error fetching todo list:", error);
+      throw error;
+    }
+  };
+  
+  
   const createUser = (data: DataContext) => {
     console.log(data);
 
@@ -69,14 +69,14 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
 
   const editData = (id: number, updatedData: DataContext) => {
     console.log(updatedData);
-  
+
     if (data) {
       customAxios
         .patch(`api/todolist/${id}`, updatedData)
         .then((response) => {
           console.log("Data updated successfully:", response.data);
-          setData((prevData:DataContext[]) =>
-            prevData.map((item:DataContext) =>
+          setData((prevData: DataContext[]) =>
+            prevData.map((item: DataContext) =>
               item._id === id ? { ...item, ...response.data } : item
             )
           );
@@ -87,41 +87,23 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
     }
   };
 
-  // const deleteDatasorf = (idData: number) => {
-  //   setData((prevData) =>
-  //     prevData.map((item) =>
-  //       item._id === idData ? { ...item, deletestatus: true } : item
-  //     )
-  //   );
-  //   setFilterdata((prevData) =>
-  //     prevData.map((item) =>
-  //       item._id === idData ? { ...item, deletestatus: true } : item
-  //     )
-  //   );
-  //   console.log("SordDelete สำเร็จ");
-  // };
-
-  // const unsorfdelete = (idData: number | number[]) => {
-  //   setData((prevData) =>
-  //     prevData.map((item) =>
-  //       item._id === idData ? { ...item, deletestatus: false } : item
-  //     )
-  //   );
-  //   setFilterdata((prevData) =>
-  //     prevData.map((item) =>
-  //       item._id === idData ? { ...item, deletestatus: false } : item
-  //     )
-  //   );
-  //   console.log("UnSordDelete สำเร็จ");
-  // };
-
-  // const deleteDatahard = (iddata: number | number[]) => {
-  //   setData((prevData) => prevData.filter((item) => item._id !== iddata));
-  //   setFilterdata((prevData) => prevData.filter((item) => item._id !== iddata));
-  //   console.log("Delete ข้อมูลสำเร็จ");
-  // };
-
-  
+  const deleteData = (id: number) => {
+    if (id) {
+      customAxios
+        .delete(`api/todolist/${id}`)
+        .then((response) => {
+          console.log("Data Delete successfully:", response.data);
+          setData((prevData: DataContext[]) =>
+            prevData.map((item: DataContext) =>
+              item._id === id ? { ...item, ...response.data } : item
+            )
+          );
+        })
+        .catch((error) => {
+          console.error("Error updating data:", error);
+        });
+    }
+  };
 
   return (
     <MyContext.Provider
@@ -129,14 +111,11 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         data,
         createUser,
         editData,
-        // deleteDatasorf,
-        // deleteDatahard,
-        // unsorfdelete,
-        // filterdata,
-        // FilterData,
+        deleteData,
+        getTodo,
       }}
     >
-      {children}
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </MyContext.Provider>
   );
 };

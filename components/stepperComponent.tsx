@@ -333,7 +333,7 @@ export default function StepperComponent() {
                   type="text"
                   fullWidth
                   disabled
-                  value={formik.values.image?.name}
+                  // value={formik.values.image?.name}
                   InputProps={{
                     endAdornment: (
                       <IconButton component="label">

@@ -27,18 +27,15 @@ interface PropsData {
 }
 export default function DeleteDialog(props: PropsData) {
   const [open, setOpen] = React.useState(false);
-
+  const { deleteData } = useMyContext();
   const [checked, setChecked] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   function handleConfirmButtonClick(id: number) {
-    if (checked) {
-      id;
-    } else {
-      id;
-    }
+    deleteData(id)
+    handleClose()
   }
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);

@@ -1,10 +1,11 @@
-import * as React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useMyContext } from "@/Context/dataContext";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Box, Button, Switch, styled } from "@mui/material";
+import { Alert, Box, Button, Switch, styled } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuListComponent from "./menulistComponents";
+import { useQuery } from "react-query";
 
 const MyStyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-columnHeaders,
@@ -43,7 +44,6 @@ const columns: GridColDef[] = [
   {
     field: "_id",
     headerName: "ID",
-    width: 50,
     disableColumnMenu: true,
     align: "left",
     headerAlign: "center",
@@ -61,19 +61,49 @@ const columns: GridColDef[] = [
     field: "createdAt",
     headerName: "createdat",
     type: "datetime",
-    width: 150,
+    width: 250,
     disableColumnMenu: true,
     align: "center",
     headerAlign: "center",
+    renderCell: (params) => {
+      const { row } = params;
+      const date = new Date(row.createdAt);
+      const formattedDatetime = new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        timeZoneName: "short",
+      }).format(date);
+
+      return <>{formattedDatetime}</>;
+    },
   },
   {
     field: "updatedAt",
     headerName: "Updatedat",
     type: "datetime",
-    width: 150,
+    width: 250,
     disableColumnMenu: true,
     align: "center",
     headerAlign: "center",
+    renderCell: (params) => {
+      const { row } = params;
+      const date = new Date(row.updatedAt);
+      const formattedDatetime = new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        timeZoneName: "short",
+      }).format(date);
+
+      return <>{formattedDatetime}</>;
+    },
   },
   {
     field: "priority",
@@ -112,7 +142,6 @@ const columns: GridColDef[] = [
     disableColumnMenu: true,
     renderCell: (params) => {
       const { row } = params;
-console.log(row.status);
 
       return (
         <>
@@ -135,7 +164,6 @@ console.log(row.status);
   {
     field: " ",
     headerName: " ",
-    width: 250,
     align: "center",
     sortable: false,
     disableColumnMenu: true,
@@ -175,17 +203,15 @@ interface DataContext {
   deletestatus: boolean;
 }
 interface PropsDataContext {
-  data?: DataContext[];
+  data: DataContext[] | undefined; // Change here
 }
 
 export default function TableComponents(props: PropsDataContext) {
-  const { data } = useMyContext();
-
   return (
     <>
       <Box style={{ height: 400, width: "100%" }}>
         <MyStyledDataGrid
-          rows={data}
+          rows={props.data || []} // Provide an empty array if data is null
           columns={columns}
           getRowId={(row) => row._id}
           initialState={{

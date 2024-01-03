@@ -194,9 +194,9 @@ export default function FormEdidDialog(props: DataContext) {
                 formik.setFieldValue("status", event.target.value)
               }
             >
-              <MenuItem value={1}>ยังไม่ทำ</MenuItem>
-              <MenuItem value={2}>กำลังทำ</MenuItem>
-              <MenuItem value={3}>ทำเสร็จแล้ว</MenuItem>
+              <MenuItem value={10}>ยังไม่ทำ</MenuItem>
+              <MenuItem value={20}>กำลังทำ</MenuItem>
+              <MenuItem value={30}>ทำเสร็จแล้ว</MenuItem>
             </Select>
           </Box>
 

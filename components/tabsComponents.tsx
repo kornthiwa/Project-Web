@@ -7,11 +7,25 @@ import { useMyContext } from "@/Context/dataContext";
 
 import TableComponents from "./tableComponent";
 import {
+  Alert,
   Autocomplete,
-
+  CircularProgress,
   TextField,
 } from "@mui/material";
-
+import { useQuery } from "react-query";
+interface DataContext {
+  _id?: any;
+  active?: boolean;
+  todo?: string;
+  priority?: number;
+  type?: string;
+  image?: {
+    image: string;
+    name: string;
+  };
+  status?: number;
+  deletestatus?: boolean;
+}
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -46,62 +60,83 @@ function a11yProps(index: number) {
 }
 
 export default function TabsComponent() {
-  const { data} =
-    useMyContext();
+  const { getTodo } = useMyContext();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["todos"],
+    queryFn: getTodo,
+  });
+
+  if (error && error instanceof Error) {
+    <Alert severity="error">
+      <p>เกิดข้อผิดพลาดในการดึงข้อมูล</p>
+      <p>{error.message}</p>
+    </Alert>;
+  }
   const [value, setValue] = React.useState<number>(0);
-  // const fulldata = data?.map((user) => user.todo);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
+      {isLoading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "200px",
+          }}
         >
-          <Tab label="ข้อมูลทั้งหมด" {...a11yProps(0)} />
-          <Tab label="ยังไม่กรอกข้อมูล" {...a11yProps(1)} />
-          <Tab label="กำลังกรอกข้อมูล" {...a11yProps(2)} />
-          <Tab label="กรอกข้อมูลสำเร็จ" {...a11yProps(3)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        {/* <Autocomplete
-          options={fulldata}
-          // value={}
-          onChange={(event, value) => FilterData(value as string)}
-          onInputChange={(event, value) => FilterData(value as string)}
-          renderInput={(params) => <TextField {...params} label="Select" />}
-        /> */}
-
-        <TableComponents />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <TableComponents
-          // data={filterdata.filter(
-          //   (item) => item.status === 10 && item.deletestatus === false
-          // )}
-        />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-      <TableComponents
-          // data={filterdata.filter(
-          //   (item) => item.status === 20 && item.deletestatus === false
-          // )}
-        />
-
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-      <TableComponents
-          // data={filterdata.filter(
-          //   (item) => item.status === 30 && item.deletestatus === false
-          // )}
-        />
-      </CustomTabPanel>
-     
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="ข้อมูลทั้งหมด" {...a11yProps(0)} />
+              <Tab label="ยังไม่กรอกข้อมูล" {...a11yProps(1)} />
+              <Tab label="กำลังกรอกข้อมูล" {...a11yProps(2)} />
+              <Tab label="กรอกข้อมูลสำเร็จ" {...a11yProps(3)} />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={value} index={0}>
+            <Autocomplete
+              options={["dd"]}
+              onChange={(event, value) => console.log(value)}
+              onInputChange={(event, value) => console.log(value)}
+              renderInput={(params) => <TextField {...params} label="Select" />}
+            />
+            <TableComponents data={data || undefined} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <TableComponents
+              data={data?.filter(
+                (item: any) => item.status === 10 && item.deletestatus === false
+              )}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <TableComponents
+              data={data?.filter(
+                (item: any) => item.status === 20 && item.deletestatus === false
+              )}
+            />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={3}>
+            <TableComponents
+              data={data?.filter(
+                (item: any) => item.status === 30 && item.deletestatus === false
+              )}
+            />
+          </CustomTabPanel>
+        </>
+      )}
     </Box>
   );
 }
