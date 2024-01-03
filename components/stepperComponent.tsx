@@ -72,7 +72,7 @@ export default function StepperComponent() {
     return skipped.has(step);
   };
   const [open, setOpen] = React.useState(false);
-  const { data, createUser,  } = useMyContext();
+  const {  createUser,  } = useMyContext();
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
@@ -97,7 +97,7 @@ export default function StepperComponent() {
       
     },
     validationSchema: validationSchema,
-    onSubmit: (values: PropsData, { resetForm }) => {
+    onSubmit:async (values: PropsData, { resetForm }) => {
       const newData: PropsData = {
         active: values.active,
         todo: values.todo,
@@ -107,7 +107,9 @@ export default function StepperComponent() {
         image:values.image
       };
 
-      createUser(newData);
+      for (let i = 0; i < 21; i++) {
+        await createUser(newData);
+      }
       handleReset();
       handleClose();
       resetForm();

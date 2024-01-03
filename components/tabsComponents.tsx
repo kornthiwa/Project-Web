@@ -62,7 +62,11 @@ function a11yProps(index: number) {
 export default function TabsComponent() {
   const { getTodo } = useMyContext();
 
-  const { data, isLoading, error } = useQuery({
+  const {
+    data: todoData,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["todos"],
     queryFn: getTodo,
   });
@@ -80,7 +84,7 @@ export default function TabsComponent() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      {isLoading ? (
+      {isLoading && (
         <Box
           sx={{
             display: "flex",
@@ -91,7 +95,9 @@ export default function TabsComponent() {
         >
           <CircularProgress />
         </Box>
-      ) : (
+      )}
+
+      {!isLoading && todoData && (
         <>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -112,29 +118,28 @@ export default function TabsComponent() {
               onInputChange={(event, value) => console.log(value)}
               renderInput={(params) => <TextField {...params} label="Select" />}
             />
-            <TableComponents data={data || undefined} />
+            <TableComponents data={todoData} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-          <TableComponents
-  data={Array.isArray(data) ? data.filter(
-    (item: DataContext) => item.status === 10 && !item.deletestatus
-  ) : undefined}
-/>
-
+            <TableComponents
+              data={todoData.filter(
+                (item: DataContext) => item.status === 10 && !item.deletestatus
+              )}
+            />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-          <TableComponents
-  data={Array.isArray(data) ? data.filter(
-    (item: DataContext) => item.status === 20 && !item.deletestatus
-  ) : undefined}
-/>
+            <TableComponents
+              data={todoData.filter(
+                (item: DataContext) => item.status === 20 && !item.deletestatus
+              )}
+            />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
-          <TableComponents
-  data={Array.isArray(data) ? data.filter(
-    (item: DataContext) => item.status === 30 && !item.deletestatus
-  ) : undefined}
-/>
+            <TableComponents
+              data={todoData.filter(
+                (item: DataContext) => item.status === 30 && !item.deletestatus
+              )}
+            />
           </CustomTabPanel>
         </>
       )}

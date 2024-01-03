@@ -191,19 +191,20 @@ const columns: GridColDef[] = [
   },
 ];
 interface DataContext {
-  active: boolean;
-  _id: any;
-  todo: string;
-  creactedat?: Date;
-  updatedat?: Date;
-  priority: number;
-  type: string;
-  image: File | null;
-  status: number;
-  deletestatus: boolean;
+  _id?: any;
+  active?: boolean;
+  todo?: string;
+  priority?: number;
+  type?: string;
+  image?: {
+    image: string;
+    name: string;
+  };
+  status?: number;
+  deletestatus?: boolean;
 }
 interface PropsDataContext {
-  data: DataContext[] | undefined; // Change here
+  data: DataContext[]
 }
 
 export default function TableComponents(props: PropsDataContext) {

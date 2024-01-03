@@ -185,49 +185,50 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     renderCell: (params) => {
       const { row } = params;
-   
+
       return (
         <>
-        
-
           <DeleteDialog
             _id={row.id}
             name={row.name}
             file={row.file}
-            dateat={row.dateat} onClose={function (): void {
+            dateat={row.dateat}
+            onClose={function (): void {
               throw new Error("Function not implemented.");
-            } }          />
+            }}
+          />
         </>
       );
     },
   },
 ];
 
-
 export default function DataTable() {
-  const { data } =
-  useMyContext();
-  const [ deleteid, setDelete] = React.useState<number[]>([]);
+  const {} = useMyContext();
+  const [deleteid, setDelete] = React.useState<number[]>([]);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 400, width: "100%" }}>
       <DataGrid
-  rows={data.filter((item:any) => item.deletestatus === true)}
-  columns={columns}
-  initialState={{
-    pagination: {
-      paginationModel: { page: 0, pageSize: 5 },
-    },
-  }}
-  pageSizeOptions={[5, 10]}
-  checkboxSelection
-  onRowSelectionModelChange={(rowSelectionModel, details) => {
-    const numericIds = rowSelectionModel.map((id) => parseInt(String(id), 10));
-    setDelete(numericIds);
-    console.log(rowSelectionModel);
-    console.log(numericIds);
-  }}
-/>
+        // rows={data.filter((item: any) => item.deletestatus === true)}
+        rows={[]}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        onRowSelectionModelChange={(rowSelectionModel, details) => {
+          const numericIds = rowSelectionModel.map((id) =>
+            parseInt(String(id), 10)
+          );
+          setDelete(numericIds);
+          console.log(rowSelectionModel);
+          console.log(numericIds);
+        }}
+      />
       <PopperComponent sorfdelete={deleteid} datahard={deleteid} />
     </div>
   );

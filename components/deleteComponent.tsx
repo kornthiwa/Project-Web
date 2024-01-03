@@ -9,7 +9,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useMyContext } from "@/Context/dataContext";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { MenuItem, Switch } from "@mui/material";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
+import customAxios from "@/Context/axios";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -18,38 +20,36 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 interface PropsData {
-  _id: number;
+  _id: string;
   name?: string;
   mail?: string;
   file?: string | undefined;
   dateat?: string;
-  onClose : ()=>void;
-
+  onClose: () => void;
 }
 export default function DeleteDialog(props: PropsData) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = React.useState(false);
   const { deleteData } = useMyContext();
   const [checked, setChecked] = React.useState(true);
 
-  const mutation = useMutation<any>({
-    mutationFn: (id: number) => deleteData(id),
+  const { mutate: deleteTodo } = useMutation({
+    mutationFn: (id: string) => deleteData(id),
     onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries(['todos']);
+      console.log("Delete Success ID");
+      queryClient.invalidateQueries(["todos"]);
     },
   });
 
-
-
-  
-
-  function handleConfirmButtonClick(id: number) {
-    mutation.mutate(id)
-    // deleteData(id)
-  }
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+  const onCreateTodo = () => {
+    deleteTodo(props._id);
+    handleClose();
   };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
   const handleClose = () => {
     setOpen(false);
     if (props.onClose) {
@@ -82,7 +82,7 @@ export default function DeleteDialog(props: PropsData) {
           </Button>
           <Button
             onClick={() => {
-              handleConfirmButtonClick(props._id);
+              onCreateTodo();
             }}
             color="primary"
             autoFocus

@@ -37,7 +37,7 @@ interface DataContext {
 
 export default function FormEdidDialog(props: DataContext) {
   const [open, setOpen] = React.useState(false);
-  const { data, editData } = useMyContext();
+  const { editData } = useMyContext();
 
   const validationSchema = Yup.object({
     active: Yup.boolean(),
