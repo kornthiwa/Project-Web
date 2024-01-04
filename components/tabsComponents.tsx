@@ -4,7 +4,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useMyContext } from "@/Context/dataContext";
-
+import { useQueryClient } from "react-query";
 import TableComponents from "./tableComponent";
 import {
   Alert,
@@ -13,6 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useQuery } from "react-query";
+import { useState } from "react";
 interface DataContext {
   _id?: any;
   active?: boolean;
@@ -60,97 +61,97 @@ function a11yProps(index: number) {
 }
 
 export default function TabsComponent() {
+  const [filter, setFilter] = React.useState<string | undefined>("");
   const { getTodo } = useMyContext();
 
-  const {
-    data: todoData,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["todos"],
-    queryFn: getTodo,
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["todos", filter],
+    queryFn: () => getTodo(filter),
   });
 
+  const handleAutocompleteInputChange = (event: any, value: any) => {
+    setFilter(value?.label || "");
+  };
+
+  const [value, setValue] = React.useState<number>(0);
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
   if (error && error instanceof Error) {
     <Alert severity="error">
       <p>เกิดข้อผิดพลาดในการดึงข้อมูล</p>
       <p>{error.message}</p>
     </Alert>;
   }
-  const [value, setValue] = React.useState<number>(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
   return (
     <Box sx={{ width: "100%" }}>
-      {isLoading && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "200px",
-          }}
-        >
-          <CircularProgress />
+      <>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+          >
+            <Tab label="ข้อมูลทั้งหมด" {...a11yProps(0)} />
+            <Tab label="ยังไม่กรอกข้อมูล" {...a11yProps(1)} />
+            <Tab label="กำลังกรอกข้อมูล" {...a11yProps(2)} />
+            <Tab label="กรอกข้อมูลสำเร็จ" {...a11yProps(3)} />
+          </Tabs>
         </Box>
-      )}
-
-      {!isLoading && todoData && (
-        <>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label="ข้อมูลทั้งหมด" {...a11yProps(0)} />
-              <Tab label="ยังไม่กรอกข้อมูล" {...a11yProps(1)} />
-              <Tab label="กำลังกรอกข้อมูล" {...a11yProps(2)} />
-              <Tab label="กรอกข้อมูลสำเร็จ" {...a11yProps(3)} />
-            </Tabs>
-          </Box>
-          <CustomTabPanel value={value} index={0}>
-            <Autocomplete
-              options={todoData.map((data) => ({
-                label: data.todo,
-                value: data._id,
-              }))}
-              getOptionLabel={(option: any) => option.label}
-              getOptionDisabled={(option) => option.value === undefined}
-              onChange={(event, value) => console.log(value)}
-              onInputChange={(event, value) => console.log(value)}
-              renderInput={(params) => {
-                return <TextField {...params} label="Select" />;
+        <CustomTabPanel value={value} index={0}>
+          <Autocomplete
+            options={(data || []).map((data) => ({
+              label: data.todo ,
+              value: data._id,
+            }))}
+            disablePortal
+            id="combo-box-demo"
+            onChange={handleAutocompleteInputChange}
+            value={filter}
+            isOptionEqualToValue={(option: any, value: any) =>
+              option.id === value.id
+            }
+            renderInput={(params) => {
+              return <TextField {...params} label="เลือก" />;
+            }}
+          />
+          {isLoading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "200px",
               }}
-            />
-
-            <TableComponents data={todoData} />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            <TableComponents
-              data={todoData.filter(
-                (item: DataContext) => item.status === 10 && !item.deletestatus
-              )}
-            />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            <TableComponents
-              data={todoData.filter(
-                (item: DataContext) => item.status === 20 && !item.deletestatus
-              )}
-            />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={3}>
-            <TableComponents
-              data={todoData.filter(
-                (item: DataContext) => item.status === 30 && !item.deletestatus
-              )}
-            />
-          </CustomTabPanel>
-        </>
-      )}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <TableComponents data={data} />
+          )}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          <TableComponents
+            data={data?.filter(
+              (item: DataContext) => item.status === 10 && !item.deletestatus
+            )}
+          />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <TableComponents
+            data={data?.filter(
+              (item: DataContext) => item.status === 20 && !item.deletestatus
+            )}
+          />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          <TableComponents
+            data={data?.filter(
+              (item: DataContext) => item.status === 30 && !item.deletestatus
+            )}
+          />
+        </CustomTabPanel>
+      </>
     </Box>
   );
 }

@@ -21,7 +21,7 @@ interface MyContextProps {
   createUser: (variables: DataContext) => Promise<void>;
   editData: (data: { id: string, todo: DataContext }) => Promise<any>; // Corrected syntax
   deleteData: (id: string) => Promise<void>;
-  getTodo: () => Promise<DataContext[]>;
+  getTodo: (todo?:string) => Promise<DataContext[]>;
 }
 
 
@@ -36,10 +36,17 @@ interface EditDataParams {
 }
 export const MyProvider: FC<MyProviderProps> = ({ children }) => {
 
-  const getTodo = async (): Promise<DataContext[]> => {
+  const getTodo = async (todo?:string): Promise<DataContext[]> => {
+    console.log("Get Api",todo);
+    
     await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
-      const response = await customAxios.get("api/todolist");
+      const queryParams = todo ? `?todo=${todo}` : "";
+      console.log(queryParams);
+      
+      const response = await customAxios.get(`api/todolist${queryParams}`);
+      console.log(response);
+      
       return response.data;
     } catch (error) {
       console.error("Error fetching todo list:", error);

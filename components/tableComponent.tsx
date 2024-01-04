@@ -204,7 +204,7 @@ interface DataContext {
   deletestatus?: boolean;
 }
 interface PropsDataContext {
-  data: DataContext[]
+  data: DataContext[] | undefined
 }
 
 export default function TableComponents(props: PropsDataContext) {
