@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import { useMyContext } from "@/Context/dataContext";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Alert, Box, Button, Switch, styled } from "@mui/material";
+import { Alert, Box, Button, Chip, Switch, styled } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuListComponent from "./menulistComponents";
@@ -146,15 +146,32 @@ const columns: GridColDef[] = [
       return (
         <>
           {row.status === 10 && (
-            <Button variant="outlined">ยังไม่กรอกข้อมูล</Button>
+              <Chip
+              color="info"
+              disabled={false}
+              size="medium"
+              variant="outlined"
+              label="ยังไม่กรอกข้อมูล"
+            />
           )}
           {row.status === 20 && (
-            <Button variant="contained">กำลังกรอกข้อมูล</Button>
+              <Chip
+              color="warning"
+              disabled={false}
+              size="medium"
+              variant="outlined"
+              label="กำลังกรอกข้อมูล"
+            />
           )}
           {row.status === 30 && (
-            <Button variant="contained" color="success">
-              กรอกข้อมูลสำเร็จ
-            </Button>
+            <Chip
+            color="success"
+            disabled={false}
+            size="medium"
+            variant="outlined"
+            label="กรอกข้อมูลสำเร็จ"
+          />
+    
           )}
         </>
       );

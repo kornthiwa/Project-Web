@@ -97,7 +97,9 @@ export const MyProvider: FC<MyProviderProps> = ({ children }) => {
         getTodo,
       }}
     >
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        </QueryClientProvider>
     </MyContext.Provider>
   );
 };
