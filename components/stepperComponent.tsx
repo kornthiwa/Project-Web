@@ -115,10 +115,10 @@ export default function StepperComponent() {
         image: values.image,
       };
 
-      // for (let i = 0; i < 21; i++) {
-      //   await createTodo(Data);
-      // }
-      await createTodo(Data);
+      for (let i = 0; i < 100; i++) {
+        await createTodo(Data);
+      }
+      // await createTodo(Data);
 
       handleReset();
       handleClose();

@@ -146,7 +146,7 @@ const columns: GridColDef[] = [
       return (
         <>
           {row.status === 10 && (
-              <Chip
+            <Chip
               color="info"
               disabled={false}
               size="medium"
@@ -155,7 +155,7 @@ const columns: GridColDef[] = [
             />
           )}
           {row.status === 20 && (
-              <Chip
+            <Chip
               color="warning"
               disabled={false}
               size="medium"
@@ -165,13 +165,12 @@ const columns: GridColDef[] = [
           )}
           {row.status === 30 && (
             <Chip
-            color="success"
-            disabled={false}
-            size="medium"
-            variant="outlined"
-            label="กรอกข้อมูลสำเร็จ"
-          />
-    
+              color="success"
+              disabled={false}
+              size="medium"
+              variant="outlined"
+              label="กรอกข้อมูลสำเร็จ"
+            />
           )}
         </>
       );
@@ -221,7 +220,7 @@ interface DataContext {
   deletestatus?: boolean;
 }
 interface PropsDataContext {
-  data: DataContext[] | undefined
+  data: DataContext[] | undefined;
 }
 
 export default function TableComponents(props: PropsDataContext) {
@@ -229,7 +228,7 @@ export default function TableComponents(props: PropsDataContext) {
     <>
       <Box style={{ height: 400, width: "100%" }}>
         <MyStyledDataGrid
-          rows={props.data || []} // Provide an empty array if data is null
+          rows={props.data || []}
           columns={columns}
           getRowId={(row) => row._id}
           initialState={{
@@ -240,6 +239,7 @@ export default function TableComponents(props: PropsDataContext) {
           pageSizeOptions={[5, 10, 20, 50]}
           checkboxSelection={false}
           rowSelection
+          onPaginationModelChange={(e) => console.log("Page",e)}
         />
       </Box>
     </>

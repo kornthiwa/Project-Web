@@ -100,7 +100,7 @@ export default function TabsComponent() {
         </Box>
         <CustomTabPanel value={value} index={0}>
           <Autocomplete
-            options={(data || []).map((data) => ({
+            options={(data?.todos || [])?.map((data:any) => ({
               label: data.todo ,
               value: data._id,
             }))}
@@ -127,26 +127,26 @@ export default function TabsComponent() {
               <CircularProgress />
             </Box>
           ) : (
-            <TableComponents data={data} />
+            <TableComponents data={data?.todos} />
           )}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <TableComponents
-            data={data?.filter(
+            data={data?.todos?.filter(
               (item: DataContext) => item.status === 10 && !item.deletestatus
             )}
           />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
           <TableComponents
-            data={data?.filter(
+            data={data?.todos?.filter(
               (item: DataContext) => item.status === 20 && !item.deletestatus
             )}
           />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
           <TableComponents
-            data={data?.filter(
+            data={data?.todos?.filter(
               (item: DataContext) => item.status === 30 && !item.deletestatus
             )}
           />

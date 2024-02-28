@@ -21,7 +21,7 @@ interface MyContextProps {
   createUser: (variables: DataContext) => Promise<void>;
   editData: (data: { id: string, todo: DataContext }) => Promise<any>; // Corrected syntax
   deleteData: (id: string) => Promise<void>;
-  getTodo: (todo?:string) => Promise<DataContext[]>;
+  getTodo: (todo?:string) => Promise<any>;
 }
 
 

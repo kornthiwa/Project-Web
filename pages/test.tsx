@@ -1,46 +1,26 @@
-import axios from 'axios';
-import React, { useState } from 'react';
+// import * as React from 'react';
+// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-function Test() {
-  const [image, setImage] = useState<File | null>(null);
-  const [data, setData] = useState<any>(null);
-
-  const submitImage = async (e) => {
-    e.preventDefault();
-
-    if (!image) {
-      return; // หรือแสดงข้อความแจ้งเตือนว่าผู้ใช้ยังไม่ได้เลือกไฟล์
-    }
-
-    const formData = new FormData();
-    formData.append("image", image);
-
-    try {
-      const result = await axios.get('http://localhost:8080/users', {
-        headers: {"Content-Type": "multipart/form-data"},
-      });
-      console.log(result.data); // จัดการข้อมูลที่ได้รับจากการ response
-      setData(result.data[0])  
-      } catch (error) {
-      console.error('Error submitting image:', error);
-    }
-  }
-
-  const onInputChange = (e) => {
-    console.log(e.target.files[0]);
-    setImage(e.target.files[0]);
-  }
-
-  return (
-    <div>
-      <form onSubmit={submitImage}>
-        <input type="file" name="image" onChange={onInputChange} />
-        <button type="submit">Click</button>
-      </form>
-      <img src={data?.image} />
-         </div>
-
-  );
-}
-
-export default Test;
+// export default function TextFieldSlotProps() {
+//   return (
+//     <LocalizationProvider dateAdapter={AdapterDayjs}>
+//       <DemoContainer components={['DatePicker', 'DatePicker', 'DatePicker']}>
+//         <DatePicker
+//           label="Small picker"
+//           slotProps={{ textField: { size: 'small' } }}
+//         />
+//         <DatePicker
+//           label="Picker with helper text"
+//           slotProps={{ textField: { helperText: 'Please fill this field' } }}
+//         />
+//         <DatePicker
+//           label="Filled picker"
+//           slotProps={{ textField: { variant: 'filled' } }}
+//         />
+//       </DemoContainer>
+//     </LocalizationProvider>
+//   );
+// }
