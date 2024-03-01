@@ -1,26 +1,37 @@
-// import * as React from 'react';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useQuery } from "react-query";
+import axios from "axios";
 
-// export default function TextFieldSlotProps() {
-//   return (
-//     <LocalizationProvider dateAdapter={AdapterDayjs}>
-//       <DemoContainer components={['DatePicker', 'DatePicker', 'DatePicker']}>
-//         <DatePicker
-//           label="Small picker"
-//           slotProps={{ textField: { size: 'small' } }}
-//         />
-//         <DatePicker
-//           label="Picker with helper text"
-//           slotProps={{ textField: { helperText: 'Please fill this field' } }}
-//         />
-//         <DatePicker
-//           label="Filled picker"
-//           slotProps={{ textField: { variant: 'filled' } }}
-//         />
-//       </DemoContainer>
-//     </LocalizationProvider>
-//   );
-// }
+const useMedicalSearch = ({ patientID, doctorID }) => {
+  return useQuery("searchMedical", async () => {
+    const { data } = await axios.get(
+      "https://busy-gray-piglet-suit.cyclic.app/patient",
+      {
+        params: {
+          patient: patientID,
+          doctor: doctorID,
+        },
+      }
+    );
+    return data;
+  });
+};
+
+const SearchComponent = () => {
+  const { data, isLoading, isError } = useMedicalSearch({
+    patientID: "123",
+    doctorID: "456",
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching data</div>;
+
+  return (
+    <div>
+      {data.map((item) => (
+        <div key={item.id}>{item.name}</div>
+      ))}
+    </div>
+  );
+};
+
+export default SearchComponent;
